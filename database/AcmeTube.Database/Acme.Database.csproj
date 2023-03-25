@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\000_create_table_membership.sql" />
+    <EmbeddedResource Include="Migrations\002_create_table_user_token.sql" />
+    <EmbeddedResource Include="Migrations\001_create_table_user.sql" />
+    <EmbeddedResource Include="Migrations\011_create_table_channel.sql" />
+    <EmbeddedResource Include="Migrations\013_create_table_video_comment.sql" />
+    <EmbeddedResource Include="Migrations\012_create_table_video.sql" />
+  </ItemGroup>
+
+</Project>

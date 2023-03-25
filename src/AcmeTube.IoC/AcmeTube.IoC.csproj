@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AcmeTube.Application\AcmeTube.Application.csproj" />
+    <ProjectReference Include="..\AcmeTube.Data\AcmeTube.Data.csproj" />
+    <ProjectReference Include="..\AcmeTube.Infrastructure\AcmeTube.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.5.0" />
+  </ItemGroup>
+
+</Project>
