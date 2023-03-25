@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AcmeTube.Api.Controllers;
 
-[Route("projects")]
+[Route("channels")]
 public sealed class ChannelController : ApiController
 {
     private readonly ChannelAppService _service;
