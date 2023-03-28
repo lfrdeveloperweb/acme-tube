@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AcmeTube.Api.Controllers
 {
     [Route("management")]
-    public class ManagementController : ControllerBase
+    public sealed class ManagementController : ControllerBase
     {
         /// <summary>
         /// Retrieve current version this application

@@ -37,9 +37,7 @@ namespace AcmeTube.Application.Services
 				request.Title,
 				request.Description,
 				request.ChannelId,
-				request.DueDate,
-				request.Priority,
-				request.Labels,
+				request.Tags,
 				operationContext);
 
 			var result = await Sender.Send(command, cancellationToken);
@@ -47,7 +45,7 @@ namespace AcmeTube.Application.Services
 			return Response.From<Video, VideoResponseData>(result, Mapper);
 		}
 
-		public async ValueTask<Response<VideoResponseData>> UpdateAsync(string id, VideoForUpdateRequest request, OperationContext operationContext, CancellationToken cancellationToken)
+		public async ValueTask<Response> UpdateAsync(string id, VideoForUpdateRequest request, OperationContext operationContext, CancellationToken cancellationToken)
 		{
 			var command = new UpdateVideo.Command(
 				id,
@@ -61,7 +59,7 @@ namespace AcmeTube.Application.Services
 
 			var result = await Sender.Send(command, cancellationToken);
 
-			return Response.From<Video, VideoResponseData>(result, Mapper);
+			return Response.From(result);
 		}
 
 		public async ValueTask<Response> CloneAsync(string id, OperationContext operationContext, CancellationToken cancellationToken)

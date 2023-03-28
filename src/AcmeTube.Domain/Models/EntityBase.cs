@@ -13,7 +13,7 @@ namespace AcmeTube.Domain.Models
         /// <summary>
         /// Identifier of user that created the record.
         /// </summary>
-        public Membership CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
         /// <summary>
         /// Date and time of record creation.
@@ -23,7 +23,7 @@ namespace AcmeTube.Domain.Models
         /// <summary>
         /// Identifier of user that done last modification of the record.
         /// </summary>
-        public Membership UpdatedBy { get; set; }
+        public string UpdatedBy { get; set; }
 
         /// <summary>
         /// Date and time of last modification of the record.

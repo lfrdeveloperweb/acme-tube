@@ -18,20 +18,20 @@ namespace AcmeTube.Data.Repositories
 {
     public sealed class VideoRepository : Repository<Video>, IVideoRepository
     {
-        private const string SplitOn = "id,labels,id,id";
+        private const string SplitOn = "id,tags,id,id";
 
         private const string BaseSelectCommandText = @"
             SELECT t.video_id as id
                  , t.title
                  , t.description
-                 , t.project_id
+                 , t.channel_id
                  , t.priority
                  , t.due_date
                  , t.completed_at
                  , t.created_at
                  , t.updated_at
                  , t.deleted_at
-                 , t.labels
+                 , t.tags
                  , t.created_by as id
                  , '' as name
                  , t.updated_by as id
@@ -102,44 +102,9 @@ namespace AcmeTube.Data.Repositories
 
         public Task CreateAsync(Video video, CancellationToken cancellationToken)
         {
-            const string commandText = @"
-                INSERT INTO video
-                (
-                    video_id,
-                    title,
-                    description,
-                    project_id,
-                    priority,
-                    due_date,
-                    labels,
-                    created_at,
-                    created_by
-                ) 
-                VALUES 
-                (
-                    @Id,
-                    @Title,
-                    @Description,
-                    @ProjectId,
-                    @Priority,
-                    @DueDate,
-                    @Labels::json,
-                    @CreatedAt,
-                    @CreatedBy
-                );";
+             base.DbSet.Add(video);
 
-            return ExecuteWithTransactionAsync(commandText, new
-            {
-                Id = video.Id,
-                Title = video.Title,
-                Description = video.Description,
-                ProjectId = video.Channel?.Id,
-                Priority = video.Priority,
-                DueDate = video.DueDate,
-                Labels = JsonConvert.SerializeObject(video.Labels, Formatting.None),
-                CreatedAt = video.CreatedAt,
-                CreatedBy = video.CreatedBy?.Id
-            }, cancellationToken);
+             return Task.CompletedTask;
         }
 
         public Task UpdateAsync(Video video, CancellationToken cancellationToken)
@@ -148,25 +113,23 @@ namespace AcmeTube.Data.Repositories
                 UPDATE video
                    SET title = @Title
                      , description = @Description
-                     , project_id = @ProjectId
+                     , channel_id = @ChannelId
                      , priority = @Priority
                      , due_date = @DueDate
-                     , labels = @Labels
+                     , tags = @Labels
                      , updated_by = @UpdatedBy
                      , updated_at = @UpdatedAt
                  WHERE video_id = @Id;";
 
             return ExecuteWithTransactionAsync(commandText, new
             {
-                Id = video.Id,
-                Title = video.Title,
-                Description = video.Description,
-                ProjectId = video.Channel?.Id,
-                Priority = video.Priority,
-                DueDate = video.DueDate,
-                Labels = JsonConvert.SerializeObject(video.Labels, Formatting.None),
-                UpdatedAt = video.UpdatedAt,
-                UpdatedBy = video.UpdatedBy?.Id
+	            video.Id,
+                video.Title,
+                video.Description,
+                ChannelId = video.Channel?.Id,
+                Labels = JsonConvert.SerializeObject(video.Tags, Formatting.None),
+                video.UpdatedAt,
+                video.UpdatedBy
             }, cancellationToken);
         }
 
@@ -284,11 +247,9 @@ namespace AcmeTube.Data.Repositories
             sql.Replace("@DynamicFilter", dynamicFilter);
         }
 
-        private static Video MapProperties(Video video, string labels, Membership creator, Membership updater)
+        private static Video MapProperties(Video video, string tags, Membership creator, Membership updater)
         {
-            video.Labels = JsonConvert.DeserializeObject<ICollection<string>>(labels);
-            video.CreatedBy = creator;
-            video.UpdatedBy = updater;
+            video.Tags = JsonConvert.DeserializeObject<ICollection<string>>(tags);
 
             return video;
         }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,12 +6,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Migrations\003_create_table_user_claims.sql" />
+    <None Remove="Migrations\011_create_table_channel.sql" />
+    <None Remove="Migrations\012_create_table_video.sql" />
+    <None Remove="Migrations\013_create_table_video_comment.sql" />
+    <None Remove="Migrations\014_create_table_playlist.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\src\AcmeTube.Api\appsettings.json" Link="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Migrations\000_create_table_membership.sql" />
     <EmbeddedResource Include="Migrations\002_create_table_user_token.sql" />
     <EmbeddedResource Include="Migrations\001_create_table_user.sql" />
+    <EmbeddedResource Include="Migrations\003_create_table_user_claims.sql" />
+    <EmbeddedResource Include="Migrations\014_create_table_playlist.sql" />
     <EmbeddedResource Include="Migrations\011_create_table_channel.sql" />
-    <EmbeddedResource Include="Migrations\013_create_table_video_comment.sql" />
     <EmbeddedResource Include="Migrations\012_create_table_video.sql" />
+    <EmbeddedResource Include="Migrations\013_create_table_video_comment.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dbup-postgresql" Version="5.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

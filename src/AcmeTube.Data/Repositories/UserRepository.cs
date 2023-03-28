@@ -50,43 +50,21 @@ public sealed class UserRepository : Repository<User>, IUserRepository
     }
 
     /// <inheritdoc />
-    public async Task<User> GetByIdAsync(string id, CancellationToken cancellationToken)
-    {
-        const string commandText = $"{BaseSelectCommandText} WHERE u.user_id = @Id";
+    public Task<User> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+	    await DbSetAsNoTracking.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-        var query = await base.Connection.QueryAsync<User, Membership, Membership, User>(
-            sql: commandText,
-            map: MapProperties,
-            param: new { id },
-            transaction: base.Transaction);
-
-        return query.FirstOrDefault();
-    }
-
-    public async Task<User> GetByDocumentNumberAsync(string documentNumber, CancellationToken cancellationToken)
-    {
-        const string commandText = $"{BaseSelectCommandText} WHERE u.document_number = @DocumentNumber";
-
-        var query = await base.Connection.QueryAsync<User, Membership, Membership, User>(
-            sql: commandText,
-        map: MapProperties,
-            param: new { documentNumber },
-            transaction: base.Transaction);
-
-        return query.FirstOrDefault();
-    }
+	public async Task<User> GetByDocumentNumberAsync(string documentNumber, CancellationToken cancellationToken) =>
+	    await DbSetAsNoTracking.FirstOrDefaultAsync(x => x.DocumentNumber == documentNumber, cancellationToken);
 
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken) => 
-        await DbSetAsNoTracking
-            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+        await DbSetAsNoTracking.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
     public async Task<User> GetByUserNameAsync(string userName, CancellationToken cancellationToken)
     {
         const string commandText = $"{BaseSelectCommandText} WHERE u.user_name = @UserName";
 
-        var query = await base.Connection.QueryAsync<User, Membership, Membership, User>(
+        var query = await base.Connection.QueryAsync<User>(
             sql: commandText,
-            map: MapProperties,
             param: new { userName },
             transaction: base.Transaction);
 
@@ -171,7 +149,7 @@ public sealed class UserRepository : Repository<User>, IUserRepository
             user.PasswordHash,
             user.Role,
             user.CreatedAt,
-            CreatedBy = user.CreatedBy?.Id
+            user.CreatedBy
         }, cancellationToken);
     }
 
@@ -229,7 +207,7 @@ public sealed class UserRepository : Repository<User>, IUserRepository
             user.Id,
             user.PasswordHash,
             user.UpdatedAt,
-            UpdatedBy = user.UpdatedBy.Id
+            user.UpdatedBy
         }, cancellationToken);
     }
 
@@ -411,13 +389,4 @@ public sealed class UserRepository : Repository<User>, IUserRepository
         return response.FirstOrDefault();
     }
     */
-
-
-    private static User MapProperties(User user, Membership creator, Membership updater)
-    {
-        user.CreatedBy = creator;
-        user.UpdatedBy = updater;
-
-        return user;
-    }
 }

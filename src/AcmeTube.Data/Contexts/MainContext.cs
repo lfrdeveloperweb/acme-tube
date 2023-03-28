@@ -76,7 +76,7 @@ namespace AcmeTube.Data.Contexts
                         
                         if (identity.IsAuthenticated)
                         {
-                            entityEntry.Entity.CreatedBy = Membership.From(identity);
+                            entityEntry.Entity.CreatedBy = identity.Id;
                         }
                         
                         break;
@@ -85,7 +85,7 @@ namespace AcmeTube.Data.Contexts
                         
                         if (identity.IsAuthenticated)
                         {
-                            entityEntry.Entity.UpdatedBy = Membership.From(identity);
+                            entityEntry.Entity.UpdatedBy = identity.Id;
                         }
                         
                         break;

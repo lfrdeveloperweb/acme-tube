@@ -38,7 +38,7 @@ namespace AcmeTube.Application.Features.Accounts
                 var userToken = await UnitOfWork.UserRepository.GetAsync<UserEmailConfirmationTokenData>(user.Id, UserTokenType.EmailConfirmationToken, command.Token, cancellationToken);
                 
                 user.ConfirmEmail();
-                user.UpdatedBy = Membership.From(user);
+                user.UpdatedBy = user.Id;
 
                 await UnitOfWork.UserRepository.UpdateAsync(user, cancellationToken);
 

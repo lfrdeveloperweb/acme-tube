@@ -37,9 +37,7 @@ namespace AcmeTube.Application.Features.Videos
 					todo.Title,
 					todo.Description,
 					todo.Channel.Id,
-					todo.DueDate,
-					todo.Priority,
-					todo.Labels,
+					todo.Tags,
 					command.OperationContext,
 					BypassValidation: true);
 

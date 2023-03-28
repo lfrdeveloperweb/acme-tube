@@ -9,10 +9,8 @@ namespace AcmeTube.Domain.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public Channel Channel { get; set; }
-        public DateTime? DueDate { get; set; }
         public int Priority { get; set; }
-        public int ViewsCount { get; set; }
-        public ICollection<string> Labels { get; set; }
+        public ICollection<string> Tags { get; set; }
         public DateTimeOffset? CompletedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
         

@@ -14,7 +14,7 @@
 
 /*
 
-	INSERT INTO membership (user_id, "name", email, role, "password", created_at)
-		VALUES('anonymous', 'Anonymous', 'anonymous@todoist.com', 2, 'P@ssw0rd', CURRENT_TIMESTAMP);
+	INSERT INTO membership (membership_id, "name", role_id, created_at)
+		VALUES('master', 'Master', 1, CURRENT_TIMESTAMP);
 
 */

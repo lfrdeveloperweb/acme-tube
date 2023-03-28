@@ -18,10 +18,7 @@ namespace AcmeTube.Api.Controllers
         private readonly VideoAppService _service;
 
         public VideoController(VideoAppService service, IOperationContextManager operationContextManager)
-            : base(operationContextManager)
-        {
-            _service = service;
-        }
+            : base(operationContextManager) => _service = service;
 
         /// <summary>
         /// Get task by id.

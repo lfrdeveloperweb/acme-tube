@@ -12,7 +12,7 @@ namespace AcmeTube.Application.DataContracts
             string ChannelId,
             DateTime? DueDate,
             [Required] int Priority,
-            ICollection<string> Labels);
+            ICollection<string> Tags);
 
         public sealed record VideoForUpdateRequest(
             [Required] string Title,

@@ -26,38 +26,28 @@ namespace AcmeTube.Application.Features.Videos
             [Required] int Priority,
             ICollection<string> Labels,
             OperationContext Context,
-            bool BypassValidation = false) : Command<CommandResult<Video>>(Context, BypassValidation);
+            bool BypassValidation = false) : Command<CommandResult>(Context, BypassValidation);
 
-        public sealed class CommandHandler : CommandHandler<Command, CommandResult<Video>>
+        public sealed class CommandHandler : CommandHandler<Command>
         {
-            private readonly ISystemClock _systemClock;
-
             public CommandHandler(
                 ILoggerFactory loggerFactory,
                 IUnitOfWork unitOfWork,
                 ICommandValidator<Command> validator,
-                IMapper mapper,
-                ISystemClock systemClock) : base(loggerFactory, unitOfWork, validator, mapper: mapper)
-            {
-                _systemClock = systemClock;
-            }
+                IMapper mapper) : base(loggerFactory, unitOfWork, validator, mapper: mapper) { }
 
-            protected override async Task<CommandResult<Video>> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
+            protected override async Task<CommandResult> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
             {
-                var todo = await UnitOfWork.VideoRepository.GetByIdAsync(command.Id, cancellationToken);
-                if (todo is null)
+                if (await UnitOfWork.VideoRepository.GetByIdAsync(command.Id, cancellationToken)  is not { } video)
                 {
-                    return CommandResult.NotFound<CommandResult<Video>>();
+                    return CommandResult.NotFound();
                 }
 
-                Mapper.Map(command, todo);
+                Mapper.Map(command, video);
 
-                todo.UpdatedBy = Membership.From(command.OperationContext.Identity);
-                todo.UpdatedAt = _systemClock.UtcNow;
+                await UnitOfWork.VideoRepository.UpdateAsync(video, cancellationToken);
 
-                await UnitOfWork.VideoRepository.CreateAsync(todo, cancellationToken);
-
-                return CommandResult.Created(todo);
+                return CommandResult.NoContent();
             }
         }
 

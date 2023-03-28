@@ -43,8 +43,8 @@ namespace AcmeTube.Application.Features.Channels
 				var project = Mapper.Map<Channel>(command);
 
 				project.Id = _keyGenerator.Generate();
-				project.CreatedBy = Membership.From(command.OperationContext.Identity);
-				project.CreatedAt = _systemClock.UtcNow;
+				//project.CreatedBy = command.OperationContext.Identity.Id;
+				//project.CreatedAt = _systemClock.UtcNow;
 
 				await UnitOfWork.ChannelRepository.CreateAsync(project, cancellationToken);
 

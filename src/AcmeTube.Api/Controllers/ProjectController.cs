@@ -1,12 +1,22 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AcmeTube.Api.Extensions;
 using AcmeTube.Api.Services;
 using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.Services;
 using AcmeTube.Domain.Commons;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AcmeTube.Api.Controllers;
+
+public class SampleActionFilter : IAsyncActionFilter
+{
+	public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+	{
+		var result = await next();
+	}
+}
 
 [Route("channels")]
 public sealed class ChannelController : ApiController
@@ -14,10 +24,7 @@ public sealed class ChannelController : ApiController
     private readonly ChannelAppService _service;
 
     public ChannelController(ChannelAppService service, IOperationContextManager operationContextManager)
-        : base(operationContextManager)
-    {
-        _service = service;
-    }
+        : base(operationContextManager) => _service = service;
 
     /// <summary>
     /// Get task by id.
@@ -25,7 +32,7 @@ public sealed class ChannelController : ApiController
     //[Permission(PermissionType.OrderRead)]
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id, CancellationToken cancellationToken) =>
-        BuildActionResult(await _service.GetAsync(id, OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
+        (await _service.GetAsync(id, OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false)).BuildActionResult();
 
     /// <summary>
     /// Search task by filter.
