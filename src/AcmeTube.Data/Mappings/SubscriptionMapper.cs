@@ -10,15 +10,19 @@ internal sealed class SubscriptionMapper : IEntityTypeConfiguration<Subscription
 	{
 		builder.ToTable("subscription");
 
-		builder.HasKey(it => new { it.ChannelId, it.MembershipId });
+		builder.HasKey("ChannelId", "UserId");
+
+		builder.Property<string>("ChannelId")
+			.HasColumnName("channel_id");
+
+		builder.Property<string>("UserId")
+			.HasColumnName("membership_id");
 
 		builder.HasOne(it => it.Channel)
-			.WithMany()
-			.HasForeignKey(it => it.ChannelId);
+			.WithMany();
 
 		builder.HasOne(it => it.User)
-			.WithMany()
-			.HasForeignKey(it => it.MembershipId);
+			.WithMany();
 
 		builder.Navigation(e => e.Channel)
 			.AutoInclude();

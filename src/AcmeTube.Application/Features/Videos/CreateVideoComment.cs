@@ -1,14 +1,13 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Repositories;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
-using AcmeTube.Domain.Security;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Videos
 {

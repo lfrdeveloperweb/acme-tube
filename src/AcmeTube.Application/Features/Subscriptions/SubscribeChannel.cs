@@ -35,8 +35,8 @@ public static class SubscribeChannel
             //var subscription = new Subscription(channel, user, _systemClock.UtcNow);
             var subscription = new Subscription
             {
-                ChannelId = channel.Id,
-                MembershipId = user.Id,
+                Channel = channel,
+                User = user,
                 CreatedAt = _systemClock.UtcNow
             };
 

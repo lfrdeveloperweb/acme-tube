@@ -1,13 +1,11 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-using AcmeTube.Application.Repositories;
+﻿using AcmeTube.Application.Repositories;
 using AcmeTube.Data.Contexts;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Channel = AcmeTube.Domain.Models.Channel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Data.Repositories;
 
@@ -40,5 +38,5 @@ public sealed class SubscriptionRepository : Repository<Subscription>, ISubscrip
 		await CreateAsync(subscription, cancellationToken);
 
 	public Task<int> UnsubscribeAsync(Subscription subscription, CancellationToken cancellationToken) =>
-		DbSet.Where(it => it.ChannelId == subscription.ChannelId && it.MembershipId == subscription.MembershipId).ExecuteDeleteAsync(cancellationToken);
+		DbSet.Where(it => it.Channel.Id == subscription.Channel.Id && it.User.Id == subscription.User.Id).ExecuteDeleteAsync(cancellationToken);
 }
