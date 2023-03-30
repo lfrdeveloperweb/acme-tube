@@ -12,9 +12,7 @@ namespace AcmeTube.Application.DataContracts
 		    string CountryName,
 		    ICollection<string> Tags,
 		    IDictionary<string, string> Links);
-
-	    public sealed record SubscribeRequest(string ChannelId);
-    }
+	}
 
     namespace Responses
     {
@@ -35,9 +33,5 @@ namespace AcmeTube.Application.DataContracts
 			int VideosCount,
             int ViewsCount,
             int SubscribersCount);
-
-        public sealed record SubscriptionUserResponseData(
-	        string Id,
-	        string Name);
 	}
 }

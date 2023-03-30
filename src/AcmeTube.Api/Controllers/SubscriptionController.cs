@@ -1,11 +1,11 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Api.Extensions;
-using AcmeTube.Api.Services;
+﻿using AcmeTube.Api.Services;
+using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.Services;
 using AcmeTube.Domain.Commons;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Api.Controllers;
 
@@ -27,15 +27,15 @@ public sealed class SubscriptionController : ApiController
 		BuildActionResult(await _service.ListChannelSubscriptionsAsync(channelId, pagingParameters, OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
 
 
-	//[HttpGet("~/users/{userId}/subscriptions")]
-	//public async Task<IActionResult> ListUserSubscriptions(string userId, [FromQuery] PagingParameters pagingParameters, CancellationToken cancellationToken) =>
-	//	BuildActionResult(await _service.ListUserSubscriptionsAsync(userId, pagingParameters, OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
+	[HttpGet("~/accounts/subscriptions")]
+	public async Task<IActionResult> ListUserSubscriptions([FromQuery] PagingParameters pagingParameters, CancellationToken cancellationToken) =>
+		BuildActionResult(await _service.ListUserSubscriptionsAsync(pagingParameters, OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
 
-	[HttpPost("{id}/subscriptions")]
-	public async Task<IActionResult> Subscribe(string id, CancellationToken cancellationToken) =>
-		BuildActionResult(await _service.SubscribeAsync(id, base.OperationContextManager.GetContext(), cancellationToken));
+	[HttpPost]
+	public async Task<IActionResult> Subscribe([FromBody] SubscribeRequest request, CancellationToken cancellationToken) =>
+		BuildActionResult(await _service.SubscribeAsync(request?.ChannelId, base.OperationContextManager.GetContext(), cancellationToken));
 
-	[HttpDelete("{id}/subscriptions")]
-	public async Task<IActionResult> Unsubscribe(string id, CancellationToken cancellationToken) =>
-		BuildActionResult(await _service.UnsubscribeAsync(id, base.OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
+	[HttpDelete]
+	public async Task<IActionResult> Unsubscribe([FromBody] UnsubscribeRequest request, CancellationToken cancellationToken) =>
+		BuildActionResult(await _service.UnsubscribeAsync(request?.ChannelId, base.OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
 }

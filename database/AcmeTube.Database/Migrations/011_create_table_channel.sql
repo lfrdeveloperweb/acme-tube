@@ -40,5 +40,6 @@
         '["videos","series","documentarios"]', 
         'master', 
         current_timestamp
-    );
+    )
+    ON CONFLICT (membership_id) DO NOTHING;
 */

@@ -45,6 +45,7 @@ namespace AcmeTube.Application.Mappers
         private void SubscriptionMappers()
         {
 	        CreateMap<User, SubscriptionUserResponseData>();
+	        CreateMap<Channel, SubscriptionChannelResponseData>();
         }
 
 		private void VideoMappers()

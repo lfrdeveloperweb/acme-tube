@@ -6,6 +6,7 @@ using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using AcmeTube.Application.Core.Commands;
 
 namespace AcmeTube.Application.Services;
 
@@ -21,22 +22,17 @@ public sealed class SubscriptionAppService : AppServiceBase
 		return Response.From<User, SubscriptionUserResponseData>(result, Mapper);
 	}
 
-	public async Task ListUserSubscriptionsAsync(string userId, PagingParameters pagingParameters, OperationContext context, CancellationToken cancellationToken)
+	public async ValueTask<PaginatedResponse<SubscriptionChannelResponseData>> ListUserSubscriptionsAsync(PagingParameters pagingParameters, OperationContext context, CancellationToken cancellationToken)
 	{
-		throw new System.NotImplementedException();
+		var query = new ListUserChannelSubscribersPaginated.Query(pagingParameters, context);
+		var result = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+
+		return Response.From<Channel, SubscriptionChannelResponseData>(result, Mapper);
 	}
 
-	public async ValueTask<Response> SubscribeAsync(string channelId, OperationContext operationContext, CancellationToken cancellationToken)
-	{
-		var result = await Sender.Send(new SubscribeChannel.Command(channelId, operationContext), cancellationToken);
+	public async ValueTask<Response> SubscribeAsync(string channelId, OperationContext operationContext, CancellationToken cancellationToken) => 
+		Response.From(await Sender.Send(new SubscribeChannel.Command(channelId, operationContext), cancellationToken));
 
-		return Response.From(result);
-	}
-
-	public async ValueTask<Response> UnsubscribeAsync(string channelId, OperationContext operationContext, CancellationToken cancellationToken)
-	{
-		var result = await Sender.Send(new SubscribeChannel.Command(channelId, operationContext), cancellationToken);
-
-		return Response.From(result);
-	}
+	public async ValueTask<Response> UnsubscribeAsync(string channelId, OperationContext operationContext, CancellationToken cancellationToken) => 
+		Response.From(await Sender.Send(new UnsubscribeChannel.Command(channelId, operationContext), cancellationToken));
 }
