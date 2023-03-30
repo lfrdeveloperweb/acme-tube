@@ -90,7 +90,7 @@ namespace AcmeTube.Application.Features.Accounts
             
 				RuleFor(command => command.UserName)
 					.NotNullOrEmpty()
-					.MustAsync(async (userName, cancellationToken) => !await unitOfWork.UserRepository.ExistByUserNameAsync(userName, cancellationToken))
+					.MustAsync(async (userName, cancellationToken) => !await unitOfWork.UserRepository.ExistByLoginAsync(userName, cancellationToken))
 					.WithMessageFromErrorCode(ReportCodeType.DuplicatedUserName);
 
 				RuleFor(request => request.Password)

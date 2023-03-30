@@ -23,7 +23,7 @@ namespace AcmeTube.Api.Controllers
         /// <summary>
         /// Get task by id.
         /// </summary>
-        [HasPermission(PermissionType.VideoRead)]
+        [HasPermission(PermissionType.VideoFull)]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id, CancellationToken cancellationToken) =>
             BuildActionResult(await _service

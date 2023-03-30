@@ -13,7 +13,7 @@
 	last_login_at			timestamptz    	NULL,
     login_count				SMALLINT		NOT NULL	DEFAULT 0,
 	access_failed_count		int				NOT NULL	DEFAULT 0,
-    is_locked				BOOLEAN			NOT NULL	CONSTRAINT user_is_locked_df DEFAULT false,
+    locked_at				timestamptz		NULL,
 	created_by				VARCHAR(32)		NULL		CONSTRAINT user_user_created_by_fk REFERENCES "user",
 	created_at				timestamptz		NOT NULL,
 	updated_by				varchar(32)		NULL		CONSTRAINT user_user_updated_by_fk REFERENCES "user",
@@ -23,7 +23,16 @@
 
 /*
 
-	INSERT INTO "user" (membership_id, login, document_number, email, "password_hash", created_at)
-		VALUES('master', 'master', '75725416070', 'master@acme-tube.com', 'P@ssw0rd', CURRENT_TIMESTAMP);
+	INSERT INTO membership (membership_id, "name", role_id, created_at)
+		VALUES
+			('master', 'Master', 1, CURRENT_TIMESTAMP),
+			('developer', 'developer', 1, CURRENT_TIMESTAMP)
+	ON CONFLICT (membership_id) DO NOTHING;
+
+	INSERT INTO "user" (membership_id, login, document_number, email, email_confirmed, "password_hash", created_at)
+		VALUES 
+			('master', 'master', '75725416070', 'master@acme-tube.com', true, 'AQAAAAEAACcQAAAAEPWEeTmGdPJPN3Y2IEEj3vT7p6E9IgtiCCMJfXTdfIdxpbKb9O/D8iGEPDpZM9IHFQ==', CURRENT_TIMESTAMP),
+			('developer', 'developer', '72872357068', 'xxxx@gmail.com', true, 'AQAAAAEAACcQAAAAEPWEeTmGdPJPN3Y2IEEj3vT7p6E9IgtiCCMJfXTdfIdxpbKb9O/D8iGEPDpZM9IHFQ==', CURRENT_TIMESTAMP)
+	ON CONFLICT (membership_id) DO NOTHING;
 
 */

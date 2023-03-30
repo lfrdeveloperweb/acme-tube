@@ -100,38 +100,31 @@ namespace AcmeTube.Data.Repositories
             return ExistsWithTransactionAsync(commandText, new { Id = id }, cancellationToken);
         }
 
-        public Task CreateAsync(Video video, CancellationToken cancellationToken)
-        {
-             base.DbSet.Add(video);
+        //public Task UpdateAsync(Video video, CancellationToken cancellationToken)
+        //{
+        //    const string commandText = @"
+        //        UPDATE video
+        //           SET title = @Title
+        //             , description = @Description
+        //             , channel_id = @ChannelId
+        //             , priority = @Priority
+        //             , due_date = @DueDate
+        //             , tags = @Labels
+        //             , updated_by = @UpdatedBy
+        //             , updated_at = @UpdatedAt
+        //         WHERE video_id = @Id;";
 
-             return Task.CompletedTask;
-        }
-
-        public Task UpdateAsync(Video video, CancellationToken cancellationToken)
-        {
-            const string commandText = @"
-                UPDATE video
-                   SET title = @Title
-                     , description = @Description
-                     , channel_id = @ChannelId
-                     , priority = @Priority
-                     , due_date = @DueDate
-                     , tags = @Labels
-                     , updated_by = @UpdatedBy
-                     , updated_at = @UpdatedAt
-                 WHERE video_id = @Id;";
-
-            return ExecuteWithTransactionAsync(commandText, new
-            {
-	            video.Id,
-                video.Title,
-                video.Description,
-                ChannelId = video.Channel?.Id,
-                Labels = JsonConvert.SerializeObject(video.Tags, Formatting.None),
-                video.UpdatedAt,
-                video.UpdatedBy
-            }, cancellationToken);
-        }
+        //    return ExecuteWithTransactionAsync(commandText, new
+        //    {
+	       //     video.Id,
+        //        video.Title,
+        //        video.Description,
+        //        ChannelId = video.Channel?.Id,
+        //        Labels = JsonConvert.SerializeObject(video.Tags, Formatting.None),
+        //        video.UpdatedAt,
+        //        video.UpdatedBy
+        //    }, cancellationToken);
+        //}
 
         public Task DeleteAsync(Video video, CancellationToken cancellationToken)
         {
@@ -208,7 +201,7 @@ namespace AcmeTube.Data.Repositories
                 videoId = comment.VideoId,
                 Description = comment.Description,
                 CreatedAt = comment.CreatedAt,
-                CreatedBy = comment.CreatedBy?.Id
+                CreatedBy = comment.CreatedBy
             }, cancellationToken);
         }
 
@@ -256,8 +249,6 @@ namespace AcmeTube.Data.Repositories
 
         private static VideoComment MapProperties(VideoComment comment, Membership creator)
         {
-            comment.CreatedBy = creator;
-
             return comment;
         }
     }

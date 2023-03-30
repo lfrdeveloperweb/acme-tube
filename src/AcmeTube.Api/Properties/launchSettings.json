@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Acme.Todoist.Api": {
+    "AcmeTube.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchUrl": "swagger",

@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.DataContracts.Requests;
+﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.DataContracts.Responses;
 using AcmeTube.Application.Features.Accounts;
 using AcmeTube.Domain.Commons;
@@ -8,6 +6,8 @@ using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Security;
 using AutoMapper;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Services
 {
@@ -28,9 +28,7 @@ namespace AcmeTube.Application.Services
 				request.ConfirmPassword,
 				operationContext);
 
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From(result);
+			return Response.From(await Sender.Send(command, cancellationToken));
 		}
 
 		public async ValueTask<Response<JwtTokenResponseData>> LoginAsync(LoginRequest request, OperationContext context, CancellationToken cancellationToken)
@@ -40,38 +38,19 @@ namespace AcmeTube.Application.Services
 				request.Password,
 				context);
 
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From<JwtToken, JwtTokenResponseData>(result, Mapper);
+			return Response.From<JwtToken, JwtTokenResponseData>(await Sender.Send(command, cancellationToken), Mapper);
 		}
     
-		public async ValueTask<Response<UserResponseData>> GetProfileAsync(OperationContext context, CancellationToken cancellationToken)
-		{
-			var result = await Sender.Send(new GetUserDetails.Query(context.Identity.Id, context), cancellationToken);
+		public async ValueTask<Response<UserResponseData>> GetProfileAsync(OperationContext context, CancellationToken cancellationToken) => Response.From<User, UserResponseData>(await Sender.Send(new GetUserDetails.Query(context.Identity.Id, context), cancellationToken), Mapper);
 
-			return Response.From<User, UserResponseData>(result, Mapper);
-		}
+		public async ValueTask<Response> LockAccountAsync(string userId, OperationContext context, CancellationToken cancellationToken) => 
+			Response.From(await Sender.Send(new LockAccount.Command(userId,context), cancellationToken));
 
-		public async ValueTask<Response> LockAccountAsync(string userId, OperationContext context, CancellationToken cancellationToken)
-		{
-			var result = await Sender.Send(new LockAccount.Command(userId,context), cancellationToken);
+		public async ValueTask<Response> UnlockAccountAsync(string userId, OperationContext context, CancellationToken cancellationToken) => 
+			Response.From(await Sender.Send(new UnlockAccount.Command(userId,context), cancellationToken));
 
-			return Response.From(result);
-		}
-
-		public async ValueTask<Response> UnlockAccountAsync(string userId, OperationContext context, CancellationToken cancellationToken)
-		{
-			var result = await Sender.Send(new UnlockAccount.Command(userId,context), cancellationToken);
-
-			return Response.From(result);
-		}
-
-		public async ValueTask<Response> ForgotPasswordAsync(ForgotPasswordRequest request, OperationContext context, CancellationToken cancellationToken)
-		{
-			var result = await Sender.Send(new ForgotPassword.Command(request.DocumentNumber, context), cancellationToken);
-
-			return Response.From(result);
-		}
+		public async ValueTask<Response> ForgotPasswordAsync(ForgotPasswordRequest request, OperationContext context, CancellationToken cancellationToken) => 
+			Response.From(await Sender.Send(new ForgotPassword.Command(request.DocumentNumber, context), cancellationToken));
 
 		public async Task<Response> ResetPasswordAsync(ResetPasswordRequest request, OperationContext context, CancellationToken cancellationToken)
 		{
@@ -82,10 +61,8 @@ namespace AcmeTube.Application.Services
 				request.ConfirmPassword,
 				request.Token,
 				context);
-        
-			var result = await Sender.Send(command, cancellationToken);
 
-			return Response.From(result);
+			return Response.From(await Sender.Send(command, cancellationToken));
 		}
 
 		public async Task<Response> ChangePasswordAsync(ChangePasswordRequest request, OperationContext context, CancellationToken cancellationToken)
@@ -96,9 +73,7 @@ namespace AcmeTube.Application.Services
 				request.ConfirmNewPassword,
 				context);
 
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From(result);
+			return Response.From(await Sender.Send(command, cancellationToken));
 		}
 
 		public async Task<Response> ConfirmEmailAsync(ConfirmEmailRequest request, OperationContext context, CancellationToken cancellationToken)
@@ -108,9 +83,7 @@ namespace AcmeTube.Application.Services
 				request.Token,
 				context);
 
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From(result);
+			return Response.From(await Sender.Send(command, cancellationToken));
 		}
 	}
 }

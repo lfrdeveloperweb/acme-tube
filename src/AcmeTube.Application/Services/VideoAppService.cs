@@ -52,9 +52,7 @@ namespace AcmeTube.Application.Services
 				request.Title,
 				request.Description,
 				request.ChannelId,
-				request.DueDate,
-				request.Priority,
-				request.Labels,
+				request.Tags,
 				operationContext);
 
 			var result = await Sender.Send(command, cancellationToken);

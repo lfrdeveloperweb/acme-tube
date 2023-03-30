@@ -39,10 +39,10 @@ namespace AcmeTube.IoC.Modules
                     .UseNpgsql(_configuration.GetConnectionString("defaultConnection"), options => options.EnableRetryOnFailure(3))
                     .UseSnakeCaseNamingConvention()
 
-                    // https://www.milanjovanovic.tech/blog/entity-framework-query-splitting
-                    //.UseNpgsql(_configuration.GetConnectionString("defaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+					// https://www.milanjovanovic.tech/blog/entity-framework-query-splitting
+					//.UseNpgsql(_configuration.GetConnectionString("defaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
 
-                    .ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug)))
+					.ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug)))
                     .LogTo(Console.WriteLine, new [] { DbLoggerCategory.Database.Command.Name })
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors();

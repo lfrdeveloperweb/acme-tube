@@ -10,17 +10,13 @@ namespace AcmeTube.Application.DataContracts
             [Required] string Title,
             string Description,
             string ChannelId,
-            DateTime? DueDate,
-            [Required] int Priority,
             ICollection<string> Tags);
 
         public sealed record VideoForUpdateRequest(
             [Required] string Title,
             string Description,
             string ChannelId,
-            DateTime? DueDate,
-            [Required] int Priority,
-            ICollection<string> Labels);
+            ICollection<string> Tags);
 
         public sealed record VideoCommentForCreationRequest(
             string Description);
@@ -32,13 +28,11 @@ namespace AcmeTube.Application.DataContracts
             string Id,
             string Title,
             string Description,
-            DateTime? DueDate,
-            int Priority,
-            ICollection<string> Labels,
-            DateTimeOffset? CompletedAt,
-            DateTimeOffset CreatedAt,
-            IdentityNamedResponse CreatedBy,
-            DateTimeOffset? UpdatedAt);
+            ICollection<string> Tags,
+			string CreatedBy,
+			DateTimeOffset CreatedAt,
+			string UpdatedBy,
+			DateTimeOffset? UpdatedAt);
 
         public sealed record VideoCommentResponseData(
             string Id,

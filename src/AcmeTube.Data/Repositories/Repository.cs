@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AcmeTube.Data.TypeHandlers;
+using AcmeTube.Domain.Commons;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -111,15 +114,43 @@ namespace AcmeTube.Data.Repositories
             : base(context)
         {
             DbSet = Context.Set<TEntity>();
-            DbSetAsNoTracking = Context.Set<TEntity>()
-                .AsNoTrackingWithIdentityResolution();
+            DbSetAsNoTracking = Context.Set<TEntity>().AsNoTrackingWithIdentityResolution();
         }
 
         protected virtual IQueryable<TEntity> DbSetAsNoTracking { get; }
 
         protected DbSet<TEntity> DbSet { get; }
 
-        public virtual async Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken) =>
+        public virtual async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellationToken) =>
             await DbSet.FindAsync(new object[] { id }, cancellationToken);
-    }
+
+        protected async Task<PaginatedResult<T>> ListPaginatedAsync<T>(IQueryable<T> query, PagingParameters pagingParameters, CancellationToken cancellationToken) =>
+	        PaginatedResult<T>.Create(
+		        data: await query
+			        .Skip(pagingParameters.Offset)
+			        .Take(pagingParameters.RecordsPerPage)
+			        .ToListAsync(cancellationToken),
+		        totalRecords: await query.CountAsync(cancellationToken));
+
+        public virtual Task CreateAsync(TEntity entity, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+
+			DbSet.Add(entity);
+
+			return Task.CompletedTask;
+		}
+
+        public virtual Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        {
+	        cancellationToken.ThrowIfCancellationRequested();
+
+			DbSet.Update(entity);
+
+			return Task.CompletedTask;
+		}
+
+		protected Task<bool> ExistsByExpressionAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken) =>
+	        DbSet.AnyAsync(expression, cancellationToken);
+	}
 }

@@ -10,10 +10,16 @@ namespace AcmeTube.IoC.Modules
             builder.RegisterType<AccountAppService>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<ChannelAppService>()
+            builder.RegisterType<UserAppService>()
+	            .InstancePerLifetimeScope();
+
+			builder.RegisterType<ChannelAppService>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<VideoAppService>()
+			builder.RegisterType<SubscriptionAppService>()
+				.InstancePerLifetimeScope();
+
+			builder.RegisterType<VideoAppService>()
                 .InstancePerLifetimeScope();
 
             // builder.Register(_ => _configuration.GetSection("orderAttachmentSettings").Get<OrderAttachmentSettings>());

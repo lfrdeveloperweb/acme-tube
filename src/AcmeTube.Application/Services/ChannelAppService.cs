@@ -15,32 +15,35 @@ namespace AcmeTube.Application.Services
     {
         public ChannelAppService(ISender sender, IMapper mapper) : base(sender, mapper) { }
 
-        public async Task<Response<ChanneltResponseData>> GetAsync(string id, OperationContext operationContext, CancellationToken cancellationToken)
+        public async Task<Response<ChannelResponseData>> GetAsync(string id, OperationContext operationContext, CancellationToken cancellationToken)
         {
             var query = new GetChannelDetails.Query(id, operationContext);
             var queryResult = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
 
-            return Response.From<Channel, ChanneltResponseData>(queryResult, Mapper);
+            return Response.From<Channel, ChannelResponseData>(queryResult, Mapper);
         }
 
-        public async Task<PaginatedResponse<ChanneltResponseData>> SearchAsync(PagingParameters pagingParameters, OperationContext operationContext, CancellationToken cancellationToken)
+        public async Task<PaginatedResponse<ChannelResponseData>> SearchAsync(PagingParameters pagingParameters, OperationContext operationContext, CancellationToken cancellationToken)
         {
             var query = new SearchChannelsPaginated.Query(pagingParameters, operationContext);
-            PaginatedQueryResult<Channel> result = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+            var result = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
 
-            return Response.From<Channel, ChanneltResponseData>(result, Mapper);
+            return Response.From<Channel, ChannelResponseData>(result, Mapper);
         }
 
-        public async ValueTask<Response<ChanneltResponseData>> CreateAsync(ChannelForCreationRequest request, OperationContext operationContext, CancellationToken cancellationToken)
+        public async ValueTask<Response<ChannelResponseData>> CreateAsync(ChannelForCreationRequest request, OperationContext operationContext, CancellationToken cancellationToken)
         {
             var command = new CreateChannel.Command(
-                request.Title,
-                request.Color,
-                operationContext);
+                request.Name,
+                request.Description,
+                request.CountryName,
+                request.Tags,
+				request.Links,
+				operationContext);
 
             var result = await Sender.Send(command, cancellationToken);
 
-            return Response.From<Channel, ChanneltResponseData>(result, Mapper);
+            return Response.From<Channel, ChannelResponseData>(result, Mapper);
         }
 
         public ValueTask<Response> DeleteAsync(string id, OperationContext operationContext, CancellationToken cancellationToken) => throw new System.NotImplementedException();

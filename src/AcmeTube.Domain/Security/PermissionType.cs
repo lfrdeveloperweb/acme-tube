@@ -25,8 +25,8 @@ namespace AcmeTube.Domain.Security
         [Description("user.unlock")]
         UserUnlock = 6,
 
-        [Description("channel.read")]
-        ChannelRead = 100,
+        [Description("channel.full")]
+        ChannelFull = 100,
 
         [Description("channel.create")]
         ChannelCreate = 101,
@@ -37,8 +37,8 @@ namespace AcmeTube.Domain.Security
         [Description("channel.delete")]
         ChannelDelete = 103,
         
-		[Description("video.read")]
-        VideoRead = 200,
+		[Description("video.full")]
+        VideoFull = 200,
 
         [Description("video.create")]
         VideoCreate = 201,

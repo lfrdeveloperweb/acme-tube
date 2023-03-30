@@ -1,17 +1,12 @@
 ﻿using System;
-using AcmeTube.Domain.Security;
 
 namespace AcmeTube.Domain.Models
 {
-    public sealed class User : EntityBase
-    {
-        public string Id { get; set; }
-
+	public sealed class User : Membership
+	{
         public string DocumentNumber { get; set; }
 
-        public required string Name { get; set; }
-
-        public string UserName { get; set; }
+        public string Login { get; set; }
 
         public string Email { get; set; }
 
@@ -23,14 +18,8 @@ namespace AcmeTube.Domain.Models
 
         public DateTime? BirthDate { get; set; }
 
-        public Role Role { get; set; }
-
         public string PasswordHash { get; private set; }
         
-        public DateTimeOffset? LockedAt { get; private set; }
-
-        public bool IsLocked => LockedAt.HasValue;
-
         public int AccessFailedCount { get; private set; }
 
         public int LoginCount { get; private set; }

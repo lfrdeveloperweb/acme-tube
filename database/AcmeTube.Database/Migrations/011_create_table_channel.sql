@@ -1,37 +1,44 @@
 ﻿CREATE TABLE channel 
 (
-	channel_id		varchar(32)			CONSTRAINT channel_pk PRIMARY KEY,
-	title			varchar(128)		NOT NULL,
-	description		text				NOT NULL,
-	country_name	varchar(64)			NOT NULL,
-	thumbnails_url	text				NULL,	
-	tags			json				NULL,	
-	created_by		varchar(32)			NOT NULL CONSTRAINT channel_user_fk REFERENCES "user",
-	created_at		timestamptz			NOT NULL
+    channel_id          varchar(32)     CONSTRAINT channel_pk PRIMARY KEY,
+    name                varchar(128)    NOT NULL,
+    description         text            NOT NULL,
+    country_name        varchar(64)     NOT NULL,
+    thumbnails_url      text            NULL,    
+    tags                json            NULL,
+    links               json            NULL,
+    videos_count        int             NOT NULL DEFAULT 0,
+    views_count         int             NOT NULL DEFAULT 0,
+    subscribers_count   int             NOT NULL DEFAULT 0,
+    created_by          varchar(32)     NOT NULL CONSTRAINT channel_user_fk REFERENCES "user",
+    created_at          timestamptz     NOT NULL,
+    updated_by          varchar(32)     NULL  CONSTRAINT video_user_updated_by_fk REFERENCES "user",
+    updated_at          timestamptz     NULL
 );
 
 /*
 
-	INSERT INTO channel 
-	(
-		channel_id, 
-		title, 
-		description, 
-		country_name,
-		thumbnails_url, 
-		tags, 
-		created_by, 
-		created_at
-	)
-	VALUES
-	(
-		'cfb1bd03f73639f6f324ccb5', 
-		'Desenvolvedor.io', 
-		'Canal oficial da plataforma desenvolvedor.io. Cursos online de programação e tecnologia.', 
-		'Brasil',
-		null, 
-		'["dotnet","c#","sql server", "kafka", ""]', 
-		'master', 
-		current_timestamp
-	);
+    INSERT INTO channel 
+    (
+        channel_id, 
+        name, 
+        description, 
+        country_name,
+        thumbnails_url, 
+        tags,
+        created_by, 
+        created_at
+    )
+    VALUES
+    (
+        '03f73639fd24ccb56f3cfb1b', 
+        'ACME Tube', 
+        'Canal oficial da plataforma ACME Tube. Videos, series, documentários e muito mais para seu entretenimento', 
+        'Brasil',
+        null, 
+        '{"facebook":"https://www.facebook.com/acme-tube", "instagram":"https://www.instagram.com/acme-tube", "twitter":"https://twitter.com/acme-tube"}'
+        '["videos","series","documentarios"]', 
+        'master', 
+        current_timestamp
+    );
 */

@@ -21,10 +21,15 @@ namespace AcmeTube.Application.Repositories
         /// </summary>
         IChannelRepository ChannelRepository { get; }
 
-        /// <summary>
-        /// Repository to handle information about <see cref="Video"/>
-        /// </summary>
-        IVideoRepository VideoRepository { get; }
+		/// <summary>
+		/// Repository to handle information about <see cref="Subscription"/>
+		/// </summary>
+		ISubscriptionRepository SubscriptionRepository { get; }
+
+		/// <summary>
+		/// Repository to handle information about <see cref="Video"/>
+		/// </summary>
+		IVideoRepository VideoRepository { get; }
 
         /// <summary>
         /// Initiates a transaction under the connection held an instance of UnitOfWork.

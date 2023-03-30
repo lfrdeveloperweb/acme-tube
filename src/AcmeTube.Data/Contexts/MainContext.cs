@@ -1,16 +1,16 @@
-﻿using System;
-using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Repositories;
+﻿using AcmeTube.Application.Repositories;
 using AcmeTube.Application.Services;
 using AcmeTube.Data.Repositories;
 using AcmeTube.Domain.Models;
-using AcmeTube.Domain.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Internal;
 using Npgsql;
+using System;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using AcmeTube.Domain.Security;
 
 namespace AcmeTube.Data.Contexts
 {
@@ -21,6 +21,7 @@ namespace AcmeTube.Data.Contexts
 
         private IUserRepository _userRepository;
         private IChannelRepository _channelRepository;
+        private ISubscriptionRepository _subscriptionRepository;
         private IVideoRepository _videoRepository;
 
         public MainContext(DbContextOptions<MainContext> options, IIdentityService identityService, ISystemClock systemClock)
@@ -40,13 +41,15 @@ namespace AcmeTube.Data.Contexts
 
         public IChannelRepository ChannelRepository => _channelRepository ??= new ChannelRepository(this);
 
-        public IVideoRepository VideoRepository => _videoRepository ??= new VideoRepository(this);
+        public ISubscriptionRepository SubscriptionRepository => _subscriptionRepository ??= new SubscriptionRepository(this);
+
+		public IVideoRepository VideoRepository => _videoRepository ??= new VideoRepository(this);
 
         public IDbConnection CreateConnection() => new NpgsqlConnection(base.Database.GetDbConnection().ConnectionString);
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+	        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
             base.OnModelCreating(modelBuilder);
         }

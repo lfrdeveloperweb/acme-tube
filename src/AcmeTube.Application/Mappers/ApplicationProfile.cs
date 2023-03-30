@@ -1,5 +1,6 @@
 ﻿using AcmeTube.Application.DataContracts.Responses;
 using AcmeTube.Application.Features.Accounts;
+using AcmeTube.Application.Features.Channels;
 using AcmeTube.Application.Features.Videos;
 using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Security;
@@ -13,6 +14,8 @@ namespace AcmeTube.Application.Mappers
         {
             CommonMappers();
             AccountMappers();
+            ChannelMappers();
+            SubscriptionMappers();
             VideoMappers();
         }
         
@@ -31,7 +34,20 @@ namespace AcmeTube.Application.Mappers
             CreateMap<User, UserResponseData>();
         }
 
-        private void VideoMappers()
+        private void ChannelMappers()
+        {
+	        CreateMap<CreateChannel.Command, Channel>();
+
+	        CreateMap<Channel, ChannelResponseData>();
+	        CreateMap<ChannelStats, ChannelStatsResponseData>();
+        }
+
+        private void SubscriptionMappers()
+        {
+	        CreateMap<User, SubscriptionUserResponseData>();
+        }
+
+		private void VideoMappers()
         {
             CreateMap<CreateVideo.Command, Video>();
             //.ForMember(

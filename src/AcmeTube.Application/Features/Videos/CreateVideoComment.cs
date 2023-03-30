@@ -21,25 +21,17 @@ namespace AcmeTube.Application.Features.Videos
 
 		public sealed class CommandHandler : CommandHandler<Command, CommandResult<VideoComment>>
 		{
-			private readonly ISystemClock _systemClock;
-
 			public CommandHandler(
 				ILoggerFactory loggerFactory,
 				IUnitOfWork unitOfWork,
 				ICommandValidator<Command> validator,
-				IMapper mapper,
-				ISystemClock systemClock) : base(loggerFactory, unitOfWork, validator, mapper: mapper)
-			{
-				_systemClock = systemClock;
-			}
+				IMapper mapper) : base(loggerFactory, unitOfWork, validator, mapper: mapper) { }
 
 			protected override async Task<CommandResult<VideoComment>> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
 			{
 				var comment = Mapper.Map<VideoComment>(command);
 
 				comment.VideoId = command.VideoId;
-				comment.CreatedBy = Membership.From(command.OperationContext.Identity);
-				comment.CreatedAt = _systemClock.UtcNow;
 
 				await UnitOfWork.VideoRepository.CreateCommentAsync(comment, cancellationToken);
 

@@ -1,8 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Domain.Commons;
+﻿using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Models.Filters;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Repositories
 {
@@ -19,6 +19,8 @@ namespace AcmeTube.Application.Repositories
 
 		Task CreateAsync(Channel channel, CancellationToken cancellationToken);
 
-		Task DeleteAsync(Channel todo, CancellationToken cancellationToken);
+		Task UpdateAsync(Channel channel, CancellationToken cancellationToken);
+
+		Task DeleteAsync(Channel channel, CancellationToken cancellationToken);
 	}
 }

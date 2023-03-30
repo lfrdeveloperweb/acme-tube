@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
-using AcmeTube.Domain.Security;
 using AutoMapper;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Videos
 {
@@ -22,9 +19,7 @@ namespace AcmeTube.Application.Features.Videos
             string Title,
             string Description,
             string ChannelId,
-            DateTime? DueDate,
-            [Required] int Priority,
-            ICollection<string> Labels,
+            ICollection<string> Tags,
             OperationContext Context,
             bool BypassValidation = false) : Command<CommandResult>(Context, BypassValidation);
 
@@ -57,12 +52,10 @@ namespace AcmeTube.Application.Features.Videos
         public sealed class CommandValidator : CommandValidator<Command>
         {
             private readonly IUnitOfWork _unitOfWork;
-            private readonly ISystemClock _dateTimeProvider;
-
+            
             public CommandValidator(IUnitOfWork unitOfWork, ISystemClock dateTimeProvider)
             {
                 _unitOfWork = unitOfWork;
-                _dateTimeProvider = dateTimeProvider;
 
                 SetupValidation();
             }
@@ -71,7 +64,10 @@ namespace AcmeTube.Application.Features.Videos
             {
                 RuleFor(request => request.Title)
                     .NotNullOrEmpty();
-            }
+
+                RuleFor(request => request.Description)
+	                .NotNullOrEmpty();
+			}
         }
     }
 }

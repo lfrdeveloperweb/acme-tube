@@ -10,11 +10,3 @@
 	updated_by				varchar(32)		NULL		CONSTRAINT membership_membership_updated_by_fk REFERENCES membership,
 	updated_at				timestamptz		NULL
 );
-
-
-/*
-
-	INSERT INTO membership (membership_id, "name", role_id, created_at)
-		VALUES('master', 'Master', 1, CURRENT_TIMESTAMP);
-
-*/

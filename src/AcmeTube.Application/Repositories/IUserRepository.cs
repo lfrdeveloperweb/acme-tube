@@ -13,17 +13,15 @@ namespace AcmeTube.Application.Repositories
 
 		Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken);
 
-		Task<User> GetByUserNameAsync(string userName, CancellationToken cancellationToken);
+		Task<User> GetByLoginAsync(string login, CancellationToken cancellationToken);
 
-		Task<bool> ExistsAsync(string id, CancellationToken cancellationToken);
-    
 		Task<bool> ExistByDocumentNumberAsync(string documentNumber, CancellationToken cancellationToken);
 
 		Task<bool> ExistByEmailAsync(string email, CancellationToken cancellationToken);
 
 		Task<bool> ExistByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);
 
-		Task<bool> ExistByUserNameAsync(string userName, CancellationToken cancellationToken);
+		Task<bool> ExistByLoginAsync(string login, CancellationToken cancellationToken);
 
 		Task CreateAsync(User user, CancellationToken cancellationToken);
 

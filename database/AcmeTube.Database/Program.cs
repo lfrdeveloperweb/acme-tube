@@ -1,11 +1,11 @@
 using DbUp;
+using DbUp.Engine;
 using DbUp.Helpers;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DbUp.Engine;
 using System.Text;
 
 public class Program
