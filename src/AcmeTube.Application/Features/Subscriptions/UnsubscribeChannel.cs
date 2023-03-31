@@ -1,6 +1,5 @@
 ﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,8 +9,7 @@ namespace AcmeTube.Application.Features.Subscriptions;
 public static class UnsubscribeChannel
 {
 	public sealed record Command(
-		string ChannelId,
-		OperationContext Context) : Command<CommandResult>(Context);
+		string ChannelId) : Command<CommandResult>;
 
 	public sealed class CommandHandler : CommandHandler<Command>
 	{

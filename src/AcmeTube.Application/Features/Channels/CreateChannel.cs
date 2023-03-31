@@ -2,7 +2,6 @@
 using AcmeTube.Application.Core.Commons;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AutoMapper;
 using FluentValidation;
@@ -21,8 +20,7 @@ namespace AcmeTube.Application.Features.Channels
 			string Description,
 			string CountryName,
 			ICollection<string> Tags,
-			IDictionary<string, string> Links,
-			OperationContext Context) : Command<CommandResult<Channel>>(Context);
+			IDictionary<string, string> Links) : Command<CommandResult<Channel>>;
 
 		public sealed class CommandHandler : CommandHandler<Command, CommandResult<Channel>>
 		{

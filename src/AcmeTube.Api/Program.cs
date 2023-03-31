@@ -2,6 +2,7 @@ using AcmeTube.Api.Filters;
 using AcmeTube.Api.Settings;
 using AcmeTube.Api.TypeConverters;
 using AcmeTube.Application;
+using AcmeTube.Application.PipelineBehaviors;
 using AcmeTube.IoC;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -140,7 +141,10 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
-builder.Services.AddMediatR(AssemblyReference.Assembly);
+builder.Services
+	.AddMediatR(AssemblyReference.Assembly)
+	.AddTransient(typeof(IPipelineBehavior<,>), typeof(OperationContextPipelineBehavior<,>));
+
 builder.Services.AddAutoMapper(AssemblyReference.Assembly);
 
 var app = builder.Build();

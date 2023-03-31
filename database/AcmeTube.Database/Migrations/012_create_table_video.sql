@@ -12,9 +12,8 @@
     likes_count     int             NOT NULL DEFAULT 0,
     dislikes_count  int             NOT NULL DEFAULT 0,
     comments_count  int             NOT NULL DEFAULT 0,
-    created_by      varchar(32)     NOT NULL CONSTRAINT video_user_created_by_fk REFERENCES "user",
+    created_by      varchar(32)     NOT NULL CONSTRAINT video_membership_created_by_fk REFERENCES membership,
     created_at      timestamptz     NOT NULL,    
-    updated_by      varchar(32)     NULL  CONSTRAINT video_user_updated_by_fk REFERENCES "user",
-    updated_at      timestamptz     NULL,
-    deleted_at      timestamptz     NULL    
+    updated_by      varchar(32)     NULL  CONSTRAINT video_membership_updated_by_fk REFERENCES membership,
+    updated_at      timestamptz     NULL    
 );

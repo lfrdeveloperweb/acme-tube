@@ -23,7 +23,8 @@ namespace AcmeTube.Application.Repositories
 
         Task DeleteAsync(Video video, CancellationToken cancellationToken);
 
-        Task<PaginatedResult<VideoComment>> ListCommentsPaginatedByFilterAsync(VideoCommentFilter filter, PagingParameters pagingParameters, CancellationToken cancellationToken);
+        Task<PaginatedResult<VideoComment>> ListCommentsPaginatedByFilterAsync(string videoId,
+	        PagingParameters pagingParameters, CancellationToken cancellationToken);
 
         Task<VideoComment> GetCommentByIdAsync(string id, CancellationToken cancellationToken);
 

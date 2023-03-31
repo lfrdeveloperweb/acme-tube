@@ -10,8 +10,8 @@ namespace AcmeTube.Application.Features.Videos
 {
 	public static class SearchVideoCommentsPaginated
 	{
-		public record Query(string VideoId, PagingParameters PagingParameters, OperationContext OperationContext)
-			: PaginatedQuery<PaginatedQueryResult<VideoComment>, VideoComment>(PagingParameters, OperationContext);
+		public sealed record Query(string VideoId, PagingParameters PagingParameters)
+			: PaginatedQuery<PaginatedQueryResult<VideoComment>, VideoComment>(PagingParameters);
 
 		public sealed class QueryHandler : IQueryHandler<Query, PaginatedQueryResult<VideoComment>>
 		{
@@ -24,12 +24,7 @@ namespace AcmeTube.Application.Features.Videos
 
 			public async Task<PaginatedQueryResult<VideoComment>> Handle(Query query, CancellationToken cancellationToken)
 			{
-				var filter = new VideoCommentFilter
-				{
-					VideoId = query.VideoId
-				};
-
-				var pagedResult = await _unitOfWork.VideoRepository.ListCommentsPaginatedByFilterAsync(filter, query.PagingParameters, cancellationToken);
+				var pagedResult = await _unitOfWork.VideoRepository.ListCommentsPaginatedByFilterAsync(query.VideoId, query.PagingParameters, cancellationToken);
 
 				return QueryResult.Ok(pagedResult.Results, query.PagingParameters, pagedResult);
 			}

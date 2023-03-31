@@ -11,8 +11,7 @@ public static class ListChannelUserSubscribersPaginated
 {
 	public record Query(
 		string ChannelId,
-		PagingParameters PagingParameters,
-		OperationContext OperationContext) : PaginatedQuery<PaginatedQueryResult<User>, User>(PagingParameters, OperationContext);
+		PagingParameters PagingParameters) : PaginatedQuery<PaginatedQueryResult<User>, User>(PagingParameters);
 
 	public sealed class QueryHandler : IQueryHandler<Query, PaginatedQueryResult<User>>
 	{

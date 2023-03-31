@@ -1,18 +1,17 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
+﻿using AcmeTube.Application.Core.Queries;
 using AcmeTube.Application.Repositories;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Models.Filters;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Channels
 {
     public static class SearchChannelsPaginated
     {
         public record Query(
-                PagingParameters PagingParameters,
-                OperationContext OperationContext) : PaginatedQuery<PaginatedQueryResult<Channel>, Channel>(PagingParameters, OperationContext);
+                PagingParameters PagingParameters) : PaginatedQuery<PaginatedQueryResult<Channel>, Channel>(PagingParameters);
 
         public sealed class QueryHandler : IQueryHandler<Query, PaginatedQueryResult<Channel>>
         {

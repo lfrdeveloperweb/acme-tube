@@ -1,13 +1,12 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
-using AcmeTube.Application.DataContracts.Requests;
+﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.DataContracts.Responses;
 using AcmeTube.Application.Features.Videos;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AutoMapper;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Services
 {
@@ -15,87 +14,63 @@ namespace AcmeTube.Application.Services
 	{
 		public VideoAppService(ISender sender, IMapper mapper) : base(sender, mapper) { }
 
-		public async Task<Response<VideoResponseData>> GetAsync(string id, OperationContext operationContext, CancellationToken cancellationToken)
+		public async Task<Response<VideoResponseData>> GetAsync(string id, CancellationToken cancellationToken)
 		{
-			var query = new GetVideoDetails.Query(id, operationContext);
-			var queryResult = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+			var queryResult = await Sender.Send(new GetVideoDetails.Query(id), cancellationToken).ConfigureAwait(false);
 
 			return Response.From<Video, VideoResponseData>(queryResult, Mapper);
 		}
 
-		public async Task<PaginatedResponse<VideoResponseData>> SearchAsync(PagingParameters pagingParameters, OperationContext operationContext, CancellationToken cancellationToken)
+		public async Task<PaginatedResponse<VideoResponseData>> SearchAsync(PagingParameters pagingParameters, CancellationToken cancellationToken)
 		{
-			var query = new SearchVideosPaginated.Query(pagingParameters, operationContext);
-			var result = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+			var result = await Sender.Send(new SearchVideosPaginated.Query(pagingParameters), cancellationToken).ConfigureAwait(false);
 
 			return Response.From<Video, VideoResponseData>(result, Mapper);
 		}
 
-		public async ValueTask<Response<VideoResponseData>> CreateAsync(VideoForCreationRequest request, OperationContext operationContext, CancellationToken cancellationToken)
+		public async ValueTask<Response<VideoResponseData>> CreateAsync(VideoForCreationRequest request, FileRequest file, CancellationToken cancellationToken)
 		{
 			var command = new CreateVideo.Command(
 				request.Title,
 				request.Description,
 				request.ChannelId,
 				request.Tags,
-				operationContext);
+				request.IsPublic,
+				file.Content);
 
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From<Video, VideoResponseData>(result, Mapper);
+			return Response.From<Video, VideoResponseData>(await Sender.Send(command, cancellationToken), Mapper);
 		}
 
-		public async ValueTask<Response> UpdateAsync(string id, VideoForUpdateRequest request, OperationContext operationContext, CancellationToken cancellationToken)
+		public async ValueTask<Response> UpdateAsync(string id, VideoForUpdateRequest request, CancellationToken cancellationToken)
 		{
 			var command = new UpdateVideo.Command(
 				id,
 				request.Title,
 				request.Description,
 				request.ChannelId,
-				request.Tags,
-				operationContext);
+				request.Tags);
 
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From(result);
+			return Response.From(await Sender.Send(command, cancellationToken));
 		}
 
-		public async ValueTask<Response> CloneAsync(string id, OperationContext operationContext, CancellationToken cancellationToken)
+		public ValueTask<Response> DeleteAsync(string id, CancellationToken cancellationToken) => 
+			throw new System.NotImplementedException();
+
+		public async Task<PaginatedResponse<VideoCommentResponseData>> SearchCommentsAsync(string videoId, PagingParameters pagingParameters, CancellationToken cancellationToken)
 		{
-			var command = new CloneVideo.Command(id, operationContext);
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From(result);
-		}
-
-		public ValueTask<Response> DeleteAsync(string id, OperationContext operationContext, CancellationToken cancellationToken) => throw new System.NotImplementedException();
-
-		public async Task<PaginatedResponse<VideoCommentResponseData>> SearchCommentsAsync(string videoId, PagingParameters pagingParameters, OperationContext operationContext, CancellationToken cancellationToken)
-		{
-			var query = new SearchVideoCommentsPaginated.Query(videoId, pagingParameters, operationContext);
-			PaginatedQueryResult<VideoComment> result = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+			var result = await Sender.Send(new SearchVideoCommentsPaginated.Query(videoId, pagingParameters), cancellationToken).ConfigureAwait(false);
 
 			return Response.From<VideoComment, VideoCommentResponseData>(result, Mapper);
 		}
 
-		public async ValueTask<Response<VideoCommentResponseData>> CreateCommentAsync(string videoId, VideoCommentForCreationRequest request, OperationContext operationContext, CancellationToken cancellationToken)
+		public async ValueTask<Response<VideoCommentResponseData>> CreateCommentAsync(string videoId, VideoCommentForCreationRequest request, CancellationToken cancellationToken)
 		{
-			var command = new CreateVideoComment.Command(
-				videoId,
-				request.Description,
-				operationContext);
-
-			var result = await Sender.Send(command, cancellationToken);
+			var result = await Sender.Send(new CreateVideoComment.Command(videoId, request.Description), cancellationToken);
 
 			return Response.From<VideoComment, VideoCommentResponseData>(result, Mapper);
 		}
 
-		public async ValueTask<Response> DeleteCommentAsync(string id, string videoId, OperationContext operationContext, CancellationToken cancellationToken)
-		{
-			var command = new DeleteVideoComment.Command(id, videoId, operationContext);
-			var result = await Sender.Send(command, cancellationToken);
-
-			return Response.From(result);
-		}
+		public async ValueTask<Response> DeleteCommentAsync(string id, string videoId, CancellationToken cancellationToken) => 
+			Response.From(await Sender.Send(new DeleteVideoComment.Command(id, videoId), cancellationToken));
 	}
 }

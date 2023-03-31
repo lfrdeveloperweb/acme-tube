@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Core.Commons;
+using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
-using AcmeTube.Domain.Security;
+using AcmeTube.Domain.Resources;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Videos
 {
@@ -23,8 +21,9 @@ namespace AcmeTube.Application.Features.Videos
             string Description,
             string ChannelId,
             ICollection<string> Tags,
-            OperationContext Context,
-            bool BypassValidation = false) : Command<CommandResult<Video>>(Context, BypassValidation);
+            bool? IsPublic,
+            byte[] FileContent,
+            bool BypassValidation = false) : Command<CommandResult<Video>>(BypassValidation);
 
         public sealed class CommandHandler : CommandHandler<Command, CommandResult<Video>>
         {
@@ -58,49 +57,33 @@ namespace AcmeTube.Application.Features.Videos
         public sealed class CommandValidator : CommandValidator<Command>
         {
             private readonly IUnitOfWork _unitOfWork;
-            private readonly ISystemClock _dateTimeProvider;
 
-            public CommandValidator(IUnitOfWork unitOfWork, ISystemClock dateTimeProvider)
+            public CommandValidator(IUnitOfWork unitOfWork)
             {
                 _unitOfWork = unitOfWork;
-                _dateTimeProvider = dateTimeProvider;
 
                 SetupValidation();
             }
 
             private void SetupValidation()
             {
-                //Transform(it => it.Title, it => it.Trim())
-                //    .NotNullOrEmpty();
+                Transform(command => command.Title, it => it.Trim())
+                    .NotNullOrEmpty();
 
-                //Transform(it => it.Description, it => it.Trim())
-                //    .NotNullOrEmpty();
+                Transform(command => command.Description, it => it.Trim())
+                    .NotNullOrEmpty();
 
-                //RuleFor(command => command.Level)
-                //    .NotNullOrEmpty()
-                //    .Must(level => Enum.IsDefined(typeof(CourseLevel), level));
-                //.WithMessageFromErrorCode(ReportCodeType.InvalidCourseLevel);
+                RuleFor(command => command.ChannelId)
+                    .NotNullOrEmpty()
+                    .MustAsync((channelId, cancellationToken) => _unitOfWork.ChannelRepository.ExistsAsync(channelId, cancellationToken))
+                    .WithMessageFromErrorCode(ReportCodeType.InvalidChannel);
 
-                //RuleFor(request => request.Name)
-                //    .NotNullOrEmpty();
+                RuleForEach(command => command.Tags)
+	                .NotNullOrEmpty();
 
-                RuleFor(request => request)
-                    .CustomAsync(CanCreate);
-            }
-
-            /// <summary>
-            /// Validate if can create Todo.
-            /// </summary>
-            private Task CanCreate(Command command, ValidationContext<Command> validationContext, CancellationToken cancellationToken)
-            {
-                //if (!RequestContext.Membership.Roles.Contains(Common.Models.Security.Role.Manager) && !RequestContext.Membership.IsSuperAdmin)
-                //{
-                //    validationContext.AddFailure("User", ReportCodeType.OnlyManagerIsAllowedToDoThisOperation);
-                //    return;
-                //}
-
-                return Task.CompletedTask;
-            }
+                RuleFor(command => command.IsPublic)
+	                .NotNullOrEmpty();
+			}
         }
     }
 }

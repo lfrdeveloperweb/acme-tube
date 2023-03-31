@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Core.Commons;
 using AcmeTube.Application.Core.Cryptography;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Resources;
 using AcmeTube.Domain.Security;
@@ -14,6 +10,9 @@ using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Accounts
 {
@@ -27,8 +26,7 @@ namespace AcmeTube.Application.Features.Accounts
 			string PhoneNumber,
 			string UserName,
 			string Password,
-			string ConfirmPassword,
-			OperationContext Context) : Command<CommandResult<User>>(Context);
+			string ConfirmPassword) : Command<CommandResult<User>>;
 
 		internal sealed class CommandHandler : CommandHandler<Command, CommandResult<User>>
 		{

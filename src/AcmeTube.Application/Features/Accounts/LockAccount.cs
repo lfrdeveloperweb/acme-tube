@@ -1,18 +1,15 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Accounts
 {
 	public static class LockAccount
 	{
-		public sealed record Command(
-			string UserId,
-			OperationContext Context) : Command<CommandResult>(Context);
+		public sealed record Command(string UserId) : Command<CommandResult>;
 
 		internal sealed class CommandHandler : CommandHandler<Command>
 		{

@@ -9,7 +9,7 @@ namespace AcmeTube.Application.Features.Videos
 {
     public sealed class GetVideoDetails
     {
-        public sealed record Query(string Id, OperationContext OperationContext) : Query<QueryResult<Video>>(OperationContext);
+        public sealed record Query(string Id) : Query<QueryResult<Video>>;
 
         public sealed class QueryHandler : IQueryHandler<Query, QueryResult<Video>>
         {

@@ -1,25 +1,21 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Core.Security;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
 using AcmeTube.Application.Services;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Resources;
 using AcmeTube.Domain.Security;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Accounts
 {
 	public static class LoginUser
 	{
-		public sealed record Command(
-			string Email,
-			string Password,
-			OperationContext Context) : Command<CommandResult<JwtToken>>(Context);
+		public sealed record Command(string Email, string Password) : Command<CommandResult<JwtToken>>;
 
 		internal sealed class CommandHandler : CommandHandler<Command, CommandResult<JwtToken>>
 		{

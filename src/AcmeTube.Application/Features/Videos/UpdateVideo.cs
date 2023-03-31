@@ -1,7 +1,6 @@
 ﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AutoMapper;
 using Microsoft.Extensions.Internal;
@@ -20,8 +19,7 @@ namespace AcmeTube.Application.Features.Videos
             string Description,
             string ChannelId,
             ICollection<string> Tags,
-            OperationContext Context,
-            bool BypassValidation = false) : Command<CommandResult>(Context, BypassValidation);
+            bool BypassValidation = false) : Command<CommandResult>(BypassValidation);
 
         public sealed class CommandHandler : CommandHandler<Command>
         {

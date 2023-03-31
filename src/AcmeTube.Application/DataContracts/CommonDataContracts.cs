@@ -11,7 +11,7 @@ namespace AcmeTube.Application.DataContracts
 {
     namespace Requests
     {
-
+	    public record FileRequest(string Name, string ContentType, long Size, byte[] Content);
     }
 
     namespace Responses

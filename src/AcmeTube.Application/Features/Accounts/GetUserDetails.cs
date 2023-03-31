@@ -1,15 +1,14 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
+﻿using AcmeTube.Application.Core.Queries;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Accounts
 {
     public sealed class GetUserDetails
     {
-        public sealed record Query(string Id, OperationContext OperationContext) : Query<QueryResult<User>>(OperationContext);
+        public sealed record Query : Query<QueryResult<User>>;
 
         internal sealed class QueryHandler : IQueryHandler<Query, QueryResult<User>>
         {
@@ -18,7 +17,7 @@ namespace AcmeTube.Application.Features.Accounts
             public QueryHandler(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
             public async Task<QueryResult<User>> Handle(Query query, CancellationToken cancellationToken) =>
-                QueryResult.OkOrNotFound(await _unitOfWork.UserRepository.GetByIdAsync(query.Id, cancellationToken));
+                QueryResult.OkOrNotFound(await _unitOfWork.UserRepository.GetByIdAsync(query.Context.Identity.Id, cancellationToken));
         }
     }
 }

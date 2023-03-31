@@ -19,15 +19,15 @@ internal sealed class ChannelMapper : IEntityTypeConfiguration<Channel>
 		builder.Property(it => it.Links)
 			.HasColumnType("json");
 
-		builder.OwnsOne(it => it.Stats, bs =>
+		builder.OwnsOne(it => it.Stats, stats =>
 		{
-			bs.Property(s => s.VideosCount)
+			stats.Property(s => s.VideosCount)
 				.HasColumnName("videos_count");
 
-			bs.Property(s => s.ViewsCount)
+			stats.Property(s => s.ViewsCount)
 				.HasColumnName("views_count");
 
-			bs.Property(s => s.SubscribersCount)
+			stats.Property(s => s.SubscribersCount)
 				.HasColumnName("subscribers_count");
 		});
 	}

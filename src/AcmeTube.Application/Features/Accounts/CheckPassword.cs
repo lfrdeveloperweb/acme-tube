@@ -1,20 +1,18 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Core.Security;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Resources;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Accounts
 {
     public static class CheckPassword
     {
         public sealed record Command(
-            string Password,
-            OperationContext Context) : Command<CommandResult>(Context);
+            string Password) : Command<CommandResult>;
 
         internal sealed class CommandHandler : CommandHandler<Command>
         {

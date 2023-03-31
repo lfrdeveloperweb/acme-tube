@@ -28,7 +28,7 @@ namespace AcmeTube.Api.Services
             var connection = context.Request.HttpContext.Connection;
 
             return new OperationContext(
-                CorrelationId: context.Request.Headers[ApplicationHeaderNames.RequestId],
+                CorrelationId: context.Request.Headers[ApplicationConstants.HeaderNames.RequestId],
                 Identity: _identityService.GetIdentity(),
                 InternalSourceIp: connection.LocalIpAddress?.ToString(),
                 ExternalSourceIp: connection.RemoteIpAddress?.ToString());

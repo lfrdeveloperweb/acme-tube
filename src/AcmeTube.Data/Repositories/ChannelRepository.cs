@@ -23,17 +23,11 @@ public sealed class ChannelRepository : Repository<Channel>, IChannelRepository
 		    .ToListAsync(cancellationToken);
         
 	    return new PaginatedResult<Channel>(result, count);
-
     }
 
-   
-    public Task<bool> ExistsAsync(string id, CancellationToken cancellationToken)
-    {
-        throw new System.NotImplementedException();
-    }
+    public Task<bool> ExistsAsync(string id, CancellationToken cancellationToken) =>
+	    base.ExistsByExpressionAsync(it => it.Id == id, cancellationToken);
 
-    public Task DeleteAsync(Channel channel, CancellationToken cancellationToken)
-    {
-        throw new System.NotImplementedException();
-    }
+    public Task DeleteAsync(Channel channel, CancellationToken cancellationToken) =>
+	    DbSet.Where(it => it.Id == channel.Id).ExecuteDeleteAsync(cancellationToken);
 }

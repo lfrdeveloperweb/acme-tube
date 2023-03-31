@@ -1,5 +1,8 @@
-﻿using AcmeTube.Api.Services;
+﻿using System.IO;
+using System.Threading.Tasks;
+using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.DataContracts.Responses;
+using AcmeTube.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,5 +33,19 @@ namespace AcmeTube.Api.Controllers
                 StatusCodes.Status503ServiceUnavailable => StatusCode(response.StatusCode, response),
                 _ => StatusCode(response.StatusCode, response)
             };
-    }
+
+        /// <summary>
+        /// Read all bytes from <see cref="IFormFile"/>.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        protected static async Task<FileRequest> GetFileAsync(IFormFile file)
+        {
+	        using var stream = new MemoryStream();
+	        
+	        await file.CopyToAsync(stream);
+
+	        return new (file.Name, file.ContentType, file.Length, stream.ToArray());
+        }
+	}
 }

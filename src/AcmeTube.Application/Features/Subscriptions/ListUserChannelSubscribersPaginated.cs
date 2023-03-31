@@ -10,8 +10,7 @@ namespace AcmeTube.Application.Features.Subscriptions;
 public static class ListUserChannelSubscribersPaginated
 {
 	public record Query(
-		PagingParameters PagingParameters,
-		OperationContext OperationContext) : PaginatedQuery<PaginatedQueryResult<Channel>, Channel>(PagingParameters, OperationContext);
+		PagingParameters PagingParameters) : PaginatedQuery<PaginatedQueryResult<Channel>, Channel>(PagingParameters);
 
 	public sealed class QueryHandler : IQueryHandler<Query, PaginatedQueryResult<Channel>>
 	{
@@ -24,7 +23,7 @@ public static class ListUserChannelSubscribersPaginated
 
 		public async Task<PaginatedQueryResult<Channel>> Handle(Query query, CancellationToken cancellationToken)
 		{
-			var pagedResult = await _unitOfWork.SubscriptionRepository.ListChannelsPaginatedByFilterAsync(query.OperationContext.Identity.Id, query.PagingParameters, cancellationToken);
+			var pagedResult = await _unitOfWork.SubscriptionRepository.ListChannelsPaginatedByFilterAsync(query.Context.Identity.Id, query.PagingParameters, cancellationToken);
 
 			return QueryResult.Ok(pagedResult.Results, query.PagingParameters, pagedResult);
 		}

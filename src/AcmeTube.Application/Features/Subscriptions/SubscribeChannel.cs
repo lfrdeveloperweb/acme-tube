@@ -1,19 +1,17 @@
 ﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
+using AcmeTube.Domain.Models;
+using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Internal;
-using AcmeTube.Domain.Models;
 
 namespace AcmeTube.Application.Features.Subscriptions;
 
 public static class SubscribeChannel
 {
     public sealed record Command(
-        string ChannelId,
-        OperationContext Context) : Command<CommandResult>(Context);
+        string ChannelId) : Command<CommandResult>;
 
     public sealed class CommandHandler : CommandHandler<Command>
     {

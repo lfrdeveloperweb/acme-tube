@@ -1,13 +1,13 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
-using AcmeTube.Application.DataContracts.Requests;
+﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.DataContracts.Responses;
 using AcmeTube.Application.Features.Channels;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AutoMapper;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+using AcmeTube.Application.Core.Queries;
 
 namespace AcmeTube.Application.Services
 {
@@ -15,37 +15,28 @@ namespace AcmeTube.Application.Services
     {
         public ChannelAppService(ISender sender, IMapper mapper) : base(sender, mapper) { }
 
-        public async Task<Response<ChannelResponseData>> GetAsync(string id, OperationContext operationContext, CancellationToken cancellationToken)
+        public async Task<Response<ChannelResponseData>> GetAsync(string id, CancellationToken cancellationToken)
         {
-            var query = new GetChannelDetails.Query(id, operationContext);
-            var queryResult = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+	        var queryResult = await Sender.Send(new GetChannelDetails.Query(id), cancellationToken).ConfigureAwait(false);
 
             return Response.From<Channel, ChannelResponseData>(queryResult, Mapper);
         }
 
-        public async Task<PaginatedResponse<ChannelResponseData>> SearchAsync(PagingParameters pagingParameters, OperationContext operationContext, CancellationToken cancellationToken)
-        {
-            var query = new SearchChannelsPaginated.Query(pagingParameters, operationContext);
-            var result = await Sender.Send(query, cancellationToken).ConfigureAwait(false);
+        public async Task<PaginatedResponse<ChannelResponseData>> SearchAsync(PagingParameters pagingParameters, CancellationToken cancellationToken) => 
+	        Response.From<Channel, ChannelResponseData>(await Sender.Send(new SearchChannelsPaginated.Query(pagingParameters), cancellationToken).ConfigureAwait(false), Mapper);
 
-            return Response.From<Channel, ChannelResponseData>(result, Mapper);
-        }
-
-        public async ValueTask<Response<ChannelResponseData>> CreateAsync(ChannelForCreationRequest request, OperationContext operationContext, CancellationToken cancellationToken)
+        public async ValueTask<Response<ChannelResponseData>> CreateAsync(ChannelForCreationRequest request, CancellationToken cancellationToken)
         {
             var command = new CreateChannel.Command(
                 request.Name,
                 request.Description,
                 request.CountryName,
                 request.Tags,
-				request.Links,
-				operationContext);
+				request.Links);
 
-            var result = await Sender.Send(command, cancellationToken);
-
-            return Response.From<Channel, ChannelResponseData>(result, Mapper);
+            return Response.From<Channel, ChannelResponseData>(await Sender.Send(command, cancellationToken), Mapper);
         }
 
-        public ValueTask<Response> DeleteAsync(string id, OperationContext operationContext, CancellationToken cancellationToken) => throw new System.NotImplementedException();
+        public ValueTask<Response> DeleteAsync(string id, CancellationToken cancellationToken) => throw new System.NotImplementedException();
     }
 }

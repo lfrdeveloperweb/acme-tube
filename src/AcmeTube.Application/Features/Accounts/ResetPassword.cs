@@ -18,8 +18,7 @@ namespace AcmeTube.Application.Features.Accounts
 			string CurrentPassword,
 			string NewPassword,
 			string ConfirmNewPassword,
-			string Token,
-			OperationContext Context) : Command<CommandResult>(Context);
+			string Token) : Command<CommandResult>;
 
 		public sealed class CommandHandler : CommandHandler<Command>
 		{

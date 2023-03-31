@@ -16,6 +16,7 @@
         InvalidPhoneNumber,
         InvalidMonth,
         InvalidYear,
+        InvalidChannel,
 
         DuplicatedDocumentNumber,
         DuplicatedEmail,

@@ -51,19 +51,11 @@ namespace AcmeTube.Application.Mappers
 		private void VideoMappers()
         {
             CreateMap<CreateVideo.Command, Video>();
-            //.ForMember(
-            //    target => target.DueDate,
-            //    option =>
-            //    {
-            //        option.AllowNull();
-            //        option.MapFrom(source => DateOnly.FromDateTime(source.DueDate.GetValueOrDefault()));
-            //    });
-
-
             CreateMap<CreateVideoComment.Command, VideoComment>();
 
             CreateMap<Video, VideoResponseData>();
-            CreateMap<VideoComment, VideoCommentResponseData>();
+            CreateMap<VideoStats, VideoStatsResponseData>();
+			CreateMap<VideoComment, VideoCommentResponseData>();
         }
     }
 }

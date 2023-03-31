@@ -1,15 +1,14 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
+﻿using AcmeTube.Application.Core.Queries;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Channels
 {
     public sealed class GetChannelDetails
     {
-        public sealed record Query(string Id, OperationContext OperationContext) : Query<QueryResult<Channel>>(OperationContext);
+	    public sealed record Query(string Id) : Query<QueryResult<Channel>>;
 
         public sealed class QueryHandler : IQueryHandler<Query, QueryResult<Channel>>
         {

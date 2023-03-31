@@ -1,14 +1,13 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
+﻿using AcmeTube.Application.Core.Commands;
 using AcmeTube.Application.Core.Cryptography;
 using AcmeTube.Application.Core.Security;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Accounts
 {
@@ -17,8 +16,7 @@ namespace AcmeTube.Application.Features.Accounts
         public record Command(
             string CurrentPassword,
             string NewPassword,
-            string ConfirmNewPassword,
-            OperationContext Context) : Command<CommandResult>(Context);
+            string ConfirmNewPassword) : Command<CommandResult>;
 
         internal sealed class CommandHandler : CommandHandler<Command>
         {

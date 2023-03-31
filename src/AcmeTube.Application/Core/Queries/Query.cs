@@ -1,4 +1,5 @@
-﻿using AcmeTube.Domain.Commons;
+﻿using AcmeTube.Application.Services;
+using AcmeTube.Domain.Commons;
 using MediatR;
 
 namespace AcmeTube.Application.Core.Queries
@@ -6,9 +7,14 @@ namespace AcmeTube.Application.Core.Queries
     public interface IQuery<out TQueryResult> : IRequest<TQueryResult>
         where TQueryResult : IQueryResult { }
 
-    public record Query<TQueryResult>(OperationContext OperationContext, bool BypassValidation = false) : IQuery<TQueryResult>
-        where TQueryResult : IQueryResult;
+    public record Query<TQueryResult>(bool BypassValidation = false) : IQuery<TQueryResult>, IOperationContextSetup
+		where TQueryResult : IQueryResult
+    {
+	    public OperationContext Context { get; private set; }
 
-    public record PaginatedQuery<TQueryResult, TData>(PagingParameters PagingParameters, OperationContext OperationContext) : Query<TQueryResult>(OperationContext)
+	    void IOperationContextSetup.Setup(OperationContext context) => Context = context;
+	}
+
+    public record PaginatedQuery<TQueryResult, TData>(PagingParameters PagingParameters) : Query<TQueryResult>
         where TQueryResult : PaginatedQueryResult<TData>;
 }

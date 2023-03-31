@@ -10,7 +10,8 @@ namespace AcmeTube.Application.DataContracts
             [Required] string Title,
             string Description,
             string ChannelId,
-            ICollection<string> Tags);
+            ICollection<string> Tags,
+            bool? IsPublic);
 
         public sealed record VideoForUpdateRequest(
             [Required] string Title,
@@ -29,12 +30,20 @@ namespace AcmeTube.Application.DataContracts
             string Title,
             string Description,
             ICollection<string> Tags,
+            bool IsPublic,
+            VideoStatsResponseData Stats,
 			string CreatedBy,
 			DateTimeOffset CreatedAt,
 			string UpdatedBy,
 			DateTimeOffset? UpdatedAt);
 
-        public sealed record VideoCommentResponseData(
+        public sealed record VideoStatsResponseData(
+	        int ViewsCount,
+	        int LikesCount,
+	        int DislikesCount,
+	        int CommentsCount);
+
+		public sealed record VideoCommentResponseData(
             string Id,
             string Description,
             DateTimeOffset CreatedAt);

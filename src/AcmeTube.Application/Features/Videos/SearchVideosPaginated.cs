@@ -10,8 +10,8 @@ namespace AcmeTube.Application.Features.Videos
 {
 	public static class SearchVideosPaginated
 	{
-		public record Query(PagingParameters PagingParameters, OperationContext OperationContext)
-			: PaginatedQuery<PaginatedQueryResult<Video>, Video>(PagingParameters, OperationContext);
+		public record Query(PagingParameters PagingParameters)
+			: PaginatedQuery<PaginatedQueryResult<Video>, Video>(PagingParameters);
 
 		public sealed class QueryHandler : IQueryHandler<Query, PaginatedQueryResult<Video>>
 		{

@@ -9,7 +9,7 @@ public sealed class Video : EntityBase, ICloneable
 	public string Title { get; set; }
 	public string Description { get; set; }
 	public Channel Channel { get; set; }
-	public int Priority { get; set; }
+	public bool IsPublic { get; set; }
 	public ICollection<string> Tags { get; set; }
 	public VideoStats Stats { get; set; }
 
@@ -27,9 +27,7 @@ public sealed class VideoStats
 public sealed class VideoComment
 {
 	public int Id { get; set; }
-
-	public string VideoId { get; set; }
-
+	public Video Video { get; set; }
 	public string Description { get; set; }
 
 	/// <summary>
