@@ -28,7 +28,7 @@ public static class SubscribeChannel
         protected override async Task<CommandResult> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
         {
             var channel = await UnitOfWork.ChannelRepository.GetByIdAsync(command.ChannelId, cancellationToken);
-            var user = await UnitOfWork.UserRepository.GetByIdAsync(command.Context.Identity.Id, cancellationToken);
+            var user = await UnitOfWork.UserRepository.GetByIdAsync(command.GetMembershipId(), cancellationToken);
 
             //var subscription = new Subscription(channel, user, _systemClock.UtcNow);
             var subscription = new Subscription

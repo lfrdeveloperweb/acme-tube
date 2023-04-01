@@ -12,7 +12,9 @@ namespace AcmeTube.Application.Core.Commands
     public record Command<TCommandResult>(bool BypassValidation = false) : ICommand<TCommandResult>, IOperationContextSetup
 		where TCommandResult : CommandResult
     {
-	    public OperationContext Context { get; private set; }
+        public string GetMembershipId() => Context?.Identity?.Id;
+
+        public OperationContext Context { get; private set; }
         
 	    void IOperationContextSetup.Setup(OperationContext context) => Context = context;
     }

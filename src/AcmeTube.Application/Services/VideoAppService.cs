@@ -7,6 +7,7 @@ using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using AcmeTube.Application.Core.Commands;
 
 namespace AcmeTube.Application.Services
 {
@@ -55,6 +56,12 @@ namespace AcmeTube.Application.Services
 
 		public ValueTask<Response> DeleteAsync(string id, CancellationToken cancellationToken) => 
 			throw new System.NotImplementedException();
+
+		public async ValueTask<Response> CreateRatingAsync(string videoId, bool isLike, CancellationToken cancellationToken) => 
+			Response.From(await Sender.Send(new CreateRatingVideo.Command(videoId, isLike ? VideoRatingType.Like : VideoRatingType.Dislike), cancellationToken));
+
+		public async ValueTask<Response> DeleteRatingAsync(string videoId, CancellationToken cancellationToken) =>
+			Response.From(await Sender.Send(new DeleteRatingVideo.Command(videoId), cancellationToken));
 
 		public async Task<PaginatedResponse<VideoCommentResponseData>> SearchCommentsAsync(string videoId, PagingParameters pagingParameters, CancellationToken cancellationToken)
 		{

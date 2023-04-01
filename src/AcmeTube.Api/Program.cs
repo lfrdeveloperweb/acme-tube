@@ -57,12 +57,6 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddSingleton<ISystemClock, SystemClock>();
 
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-builder.Host.ConfigureContainer<ContainerBuilder>((context, containerBuilder) => 
-    InjectorBootstrapper.Inject(containerBuilder, builder.Configuration, builder.Services, Assembly.GetExecutingAssembly()));
-
-
-
 // TODO: Move to infrastructure.
 //builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 //builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
@@ -146,6 +140,10 @@ builder.Services
 	.AddTransient(typeof(IPipelineBehavior<,>), typeof(OperationContextPipelineBehavior<,>));
 
 builder.Services.AddAutoMapper(AssemblyReference.Assembly);
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>((context, containerBuilder) =>
+	InjectorBootstrapper.Inject(containerBuilder, builder.Configuration, builder.Services, Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
 

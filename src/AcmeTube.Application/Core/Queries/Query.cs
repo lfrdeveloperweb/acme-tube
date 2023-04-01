@@ -10,7 +10,9 @@ namespace AcmeTube.Application.Core.Queries
     public record Query<TQueryResult>(bool BypassValidation = false) : IQuery<TQueryResult>, IOperationContextSetup
 		where TQueryResult : IQueryResult
     {
-	    public OperationContext Context { get; private set; }
+	    public string GetMembershipId() => Context?.Identity?.Id;
+
+		public OperationContext Context { get; private set; }
 
 	    void IOperationContextSetup.Setup(OperationContext context) => Context = context;
 	}

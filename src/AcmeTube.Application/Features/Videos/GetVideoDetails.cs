@@ -1,9 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
+﻿using AcmeTube.Application.Core.Queries;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+using AcmeTube.Domain.Events;
 
 namespace AcmeTube.Application.Features.Videos
 {
@@ -14,11 +15,20 @@ namespace AcmeTube.Application.Features.Videos
         public sealed class QueryHandler : IQueryHandler<Query, QueryResult<Video>>
         {
             private readonly IVideoRepository _videoRepository;
+            private readonly IPublisher _publisher;
 
-            public QueryHandler(IVideoRepository videoRepository) => _videoRepository = videoRepository;
+            public QueryHandler(IVideoRepository videoRepository, IPublisher publisher)
+            {
+	            _videoRepository = videoRepository;
+	            _publisher = publisher;
+            }
 
-            public async Task<QueryResult<Video>> Handle(Query query, CancellationToken cancellationToken) =>
-                QueryResult.OkOrNotFound(await _videoRepository.GetByIdAsync(query.Id, cancellationToken));
+            public async Task<QueryResult<Video>> Handle(Query query, CancellationToken cancellationToken)
+            {
+	            await _publisher.Publish(new VideoViewedEvent(query.Id, query.Context.Identity), cancellationToken);
+                
+	            return QueryResult.OkOrNotFound(await _videoRepository.GetByIdAsync(query.Id, cancellationToken));
+            }
         }
     }
 }

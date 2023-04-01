@@ -67,7 +67,7 @@ namespace AcmeTube.Data.Repositories
         /// <param name="commandText">SQL command to be executed.</param>
         /// <param name="parameters">SQL parameters.</param>
         /// <param name="cancellationToken">The cancellation token for this operation.</param>
-        protected Task ExecuteWithTransactionAsync(string commandText, object parameters = null, CancellationToken cancellationToken = default) =>
+        protected Task<int> ExecuteWithTransactionAsync(string commandText, object parameters = null, CancellationToken cancellationToken = default) =>
             Connection.ExecuteAsync(new CommandDefinition(commandText, parameters, Transaction, cancellationToken: cancellationToken));
 
         /// <summary>

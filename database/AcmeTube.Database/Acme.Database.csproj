@@ -10,6 +10,8 @@
     <None Remove="Migrations\011_create_table_channel.sql" />
     <None Remove="Migrations\012_create_table_video.sql" />
     <None Remove="Migrations\013_create_table_video_comment.sql" />
+    <None Remove="Migrations\013_create_table_video_rating.sql" />
+    <None Remove="Migrations\013_create_table_video_view.sql" />
     <None Remove="Migrations\014_create_table_playlist.sql" />
     <None Remove="Migrations\015_create_table_subscription.sql" />
   </ItemGroup>
@@ -25,6 +27,8 @@
     <EmbeddedResource Include="Migrations\002_create_table_user_token.sql" />
     <EmbeddedResource Include="Migrations\001_create_table_user.sql" />
     <EmbeddedResource Include="Migrations\003_create_table_user_claims.sql" />
+    <EmbeddedResource Include="Migrations\013_create_table_video_view.sql" />
+    <EmbeddedResource Include="Migrations\013_create_table_video_rating.sql" />
     <EmbeddedResource Include="Migrations\015_create_table_subscription.sql" />
     <EmbeddedResource Include="Migrations\014_create_table_playlist.sql" />
     <EmbeddedResource Include="Migrations\011_create_table_channel.sql" />

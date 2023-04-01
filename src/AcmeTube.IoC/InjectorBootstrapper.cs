@@ -1,8 +1,10 @@
-﻿using System.Reflection;
-using AcmeTube.IoC.Modules;
+﻿using AcmeTube.IoC.Modules;
 using Autofac;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Reflection;
 
 namespace AcmeTube.IoC
 {
@@ -23,10 +25,14 @@ namespace AcmeTube.IoC
 
             builder
                 .RegisterAssemblyTypes(assemblies)
-                // Exclude all types that extends from INotificationHandler by avoid duplicate registers with the extension 'AddMediatR' present in 'Startup'.
-                //.Where(type => !type.IsAssignableToGenericType(typeof(INotificationHandler<>)))
+                // Exclude all types that extends from INotificationHandler to avoid duplicate registers with the extension 'AddMediatR' present in 'Program'.
+				.Where(type => !type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
+				//.Where(type => !type.IsAssignableFrom(typeof(INotificationHandler<>)))
+                //.Where(type => !(type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+
 
             builder.RegisterModule(new DataModule(configuration));
             builder.RegisterModule<CoreModule>();

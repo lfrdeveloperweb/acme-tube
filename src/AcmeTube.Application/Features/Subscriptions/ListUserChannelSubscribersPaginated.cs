@@ -23,7 +23,7 @@ public static class ListUserChannelSubscribersPaginated
 
 		public async Task<PaginatedQueryResult<Channel>> Handle(Query query, CancellationToken cancellationToken)
 		{
-			var pagedResult = await _unitOfWork.SubscriptionRepository.ListChannelsPaginatedByFilterAsync(query.Context.Identity.Id, query.PagingParameters, cancellationToken);
+			var pagedResult = await _unitOfWork.SubscriptionRepository.ListChannelsPaginatedByFilterAsync(query.GetMembershipId(), query.PagingParameters, cancellationToken);
 
 			return QueryResult.Ok(pagedResult.Results, query.PagingParameters, pagedResult);
 		}

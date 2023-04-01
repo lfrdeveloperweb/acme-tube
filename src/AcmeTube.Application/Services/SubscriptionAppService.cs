@@ -6,7 +6,6 @@ using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
 
 namespace AcmeTube.Application.Services;
 

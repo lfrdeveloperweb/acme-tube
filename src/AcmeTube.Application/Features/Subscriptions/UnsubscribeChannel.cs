@@ -19,7 +19,7 @@ public static class UnsubscribeChannel
 
 		protected override async Task<CommandResult> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
 		{
-			if (await UnitOfWork.SubscriptionRepository.GetAsync(command.ChannelId, command.Context.Identity.Id, cancellationToken) is not { } subscription)
+			if (await UnitOfWork.SubscriptionRepository.GetAsync(command.ChannelId, command.GetMembershipId(), cancellationToken) is not { } subscription)
 			{
 				return CommandResult.NotFound();
 			}

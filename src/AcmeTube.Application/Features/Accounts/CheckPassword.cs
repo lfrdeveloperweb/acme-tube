@@ -28,7 +28,7 @@ namespace AcmeTube.Application.Features.Accounts
 
             protected override async Task<CommandResult> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
             {
-                var user = await UnitOfWork.UserRepository.GetByIdAsync(command.Context.Identity.Id, cancellationToken);
+                var user = await UnitOfWork.UserRepository.GetByIdAsync(command.GetMembershipId(), cancellationToken);
 
                 var checkPasswordResult = await _securityService.CheckPasswordAsync(user, command.Password);
 

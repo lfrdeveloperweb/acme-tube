@@ -23,4 +23,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Events\Accounts\" />
+    <Folder Include="Events\Videos\" />
+  </ItemGroup>
+
 </Project>

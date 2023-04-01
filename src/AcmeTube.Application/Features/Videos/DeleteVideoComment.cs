@@ -24,7 +24,7 @@ namespace AcmeTube.Application.Features.Videos
 					return CommandResult.NotFound();
 				}
 				
-				await UnitOfWork.VideoRepository.DeleteCommentAsync(comment, cancellationToken);
+				await UnitOfWork.VideoRepository.DeleteCommentAsync(comment.Id, cancellationToken);
 
 				return CommandResult.NoContent();
 			}

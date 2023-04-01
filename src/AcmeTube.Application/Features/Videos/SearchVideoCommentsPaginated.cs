@@ -1,10 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Core.Queries;
+﻿using AcmeTube.Application.Core.Queries;
 using AcmeTube.Application.Repositories;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
-using AcmeTube.Domain.Models.Filters;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Application.Features.Videos
 {
