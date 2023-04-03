@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AcmeTube.Data.TypeHandlers;
 using AcmeTube.Domain.Commons;
+using AcmeTube.Domain.Models;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -121,8 +122,16 @@ namespace AcmeTube.Data.Repositories
 
         protected DbSet<TEntity> DbSet { get; }
 
-        public virtual async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-            await DbSet.FindAsync(new object[] { id }, cancellationToken);
+        public virtual async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellationToken)
+        {
+	        var playlist = Context
+		        .Set<Playlist>()
+		        .OfType<ChannelPlaylist>()
+		        .AsSplitQuery()
+		        .ToList();
+
+	        return await DbSet.FindAsync(new object[] { id }, cancellationToken);
+        }
 
         protected async Task<PaginatedResult<T>> ListPaginatedAsync<T>(IQueryable<T> query, PagingParameters pagingParameters, CancellationToken cancellationToken) =>
 	        PaginatedResult<T>.Create(
@@ -132,14 +141,8 @@ namespace AcmeTube.Data.Repositories
 			        .ToListAsync(cancellationToken),
 		        totalRecords: await query.CountAsync(cancellationToken));
 
-        public virtual Task CreateAsync(TEntity entity, CancellationToken cancellationToken)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			DbSet.Add(entity);
-
-			return Task.CompletedTask;
-		}
+        public virtual async Task CreateAsync(TEntity entity, CancellationToken cancellationToken) => 
+	        await DbSet.AddAsync(entity, cancellationToken);
 
         public virtual Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {

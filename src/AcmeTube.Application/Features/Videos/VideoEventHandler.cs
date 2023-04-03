@@ -1,4 +1,5 @@
-﻿using AcmeTube.Application.Repositories;
+﻿using System;
+using AcmeTube.Application.Repositories;
 using AcmeTube.Domain.Events;
 using MediatR;
 using System.Threading;
@@ -69,15 +70,12 @@ namespace AcmeTube.Application.Features.Videos
 		public async Task Handle(VideoRatingDeletedEvent @event, CancellationToken cancellationToken)
 		{
 			var video = await _unitOfWork.VideoRepository.GetByIdAsync(@event.VideoId, cancellationToken);
+			
+			Action videoRatingAction = @event.RatingType == VideoRatingType.Like 
+				? video.DecreaseLikesCount 
+				: video.DecreaseDislikesCount;
 
-			if (@event.RatingType == VideoRatingType.Like)
-			{
-				video.DecreaseLikesCount();
-			}
-			else
-			{
-				video.DecreaseDislikesCount();
-			}
+			videoRatingAction();
 
 			await _unitOfWork.VideoRepository.UpdateAsync(video, cancellationToken);
 		}

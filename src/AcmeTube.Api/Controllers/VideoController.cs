@@ -10,10 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
-using MediaToolkit;
-using MediaToolkit.Model;
 using System;
-using System.Text.RegularExpressions;
 
 namespace AcmeTube.Api.Controllers
 {
@@ -22,8 +19,13 @@ namespace AcmeTube.Api.Controllers
     public sealed class VideoController : ApiController
     {
         private readonly VideoAppService _service;
+        private readonly IMediaService _mediaService;
 
-        public VideoController(VideoAppService service) => _service = service;
+        public VideoController(VideoAppService service, IMediaService mediaService)
+        {
+	        _service = service;
+	        _mediaService = mediaService;
+        }
 
         /// <summary>
         /// Get task by id.
@@ -53,28 +55,13 @@ namespace AcmeTube.Api.Controllers
 	        if (request == null || file == null || file.Length == 0) 
 		        return BadRequest();
 
+	        var fileRequest = await GetFileAsync(file);
 
-	  //      var extension = Path.GetExtension(file.FileName);
-	  //      var tempFileName = Path.GetTempFileName();
-
-	  //      var uploadedFileInfo = new FileInfo(Path.ChangeExtension(tempFileName, extension));
+	        var result = await _mediaService.GetVideoMetadata(fileRequest.Content, Path.GetExtension(file.FileName));
 
 
-			//using (var stream = System.IO.File.Open(uploadedFileInfo.FullName, FileMode.Append))
-	  //      {
-		 //       await file.CopyToAsync(stream, cancellationToken);
-	  //      }
 
-			//var inputFile = new MediaFile(uploadedFileInfo.FullName);
-
-	  //      using (var engine = new Engine())
-	  //      {
-		 //       engine.GetMetadata(inputFile);
-	  //      }
-
-	  //      uploadedFileInfo.Delete();
-
-			var fileRequest = await GetFileAsync(file);
+			
 
 			return BuildActionResult(await _service
 		        .CreateAsync(request, fileRequest, cancellationToken)

@@ -7,6 +7,7 @@ using AcmeTube.IoC;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Destructurama;
+using MediaToolkit.Standard.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -28,6 +29,13 @@ IdentityModelEventSource.ShowPII = true;
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 var builder = WebApplication.CreateBuilder(args);
+
+Console.Title = builder.Environment.ApplicationName;
+
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//	options.AddServerHeader = false;
+//});
 
 builder.Host.UseSerilog((context, loggerConfiguration) =>
 {
@@ -140,6 +148,8 @@ builder.Services
 	.AddTransient(typeof(IPipelineBehavior<,>), typeof(OperationContextPipelineBehavior<,>));
 
 builder.Services.AddAutoMapper(AssemblyReference.Assembly);
+
+builder.Services.AddMediaToolkit(@"C:\Programas\ffmpeg-new\bin\ffmpeg.exe", @"C:\Programas\ffmpeg-new\bin\ffprobe.exe");
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((context, containerBuilder) =>

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Internal;
 using Npgsql;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,12 +28,12 @@ namespace AcmeTube.Data.Contexts
         public MainContext(DbContextOptions<MainContext> options, IIdentityService identityService, ISystemClock systemClock)
             : base(options)
         {
-            // Database.Log = (sql) => Debug.Write(sql);
-            //Configuration.LazyLoadingEnabled = true;
-            //Configuration.ProxyCreationEnabled = false;
-            //Configuration.AutoDetectChangesEnabled = true;
+	        // Database.Log = (sql) => Debug.Write(sql);
+			//Configuration.LazyLoadingEnabled = true;
+			//Configuration.ProxyCreationEnabled = false;
+			//Configuration.AutoDetectChangesEnabled = true;
 
-            _identityService = identityService;
+			_identityService = identityService;
             _systemClock = systemClock;
         }
 

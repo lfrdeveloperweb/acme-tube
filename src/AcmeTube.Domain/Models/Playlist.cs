@@ -1,17 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AcmeTube.Domain.Models;
 
-public sealed class Playlist
+public abstract class Playlist : EntityBase
 {
 	public string Id { get; set; }
 	public string Title { get; set; }
 	public string Description { get; set; }
+	public ICollection<Video> Videos { get; set; }
+}
+
+public sealed class ChannelPlaylist : Playlist
+{
 	public Channel Channel { get; set; }
 	public bool? IsPublic { get; set; }
-	public ICollection<Video> Videos { get; set; }
-	public DateTimeOffset CreatedAt { get; set; }
+}
+
+public sealed class UserPlaylist : Playlist
+{
+	public User User { get; set; }
 }
 
 public sealed class PlaylistItem
