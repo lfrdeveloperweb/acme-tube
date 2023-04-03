@@ -44,7 +44,11 @@
         InvalidPassword,
         NewPasswordEqualsCurrentPassword,
 
-        // Internal Server Errors
-        UnexpectedError = 500000,
-    }
+        UnsupportedContentType,
+        FileExceedsMaximumSizeInMegabytes,
+
+		// Internal Server Errors
+		UnexpectedError = 500000,
+		DropboxFailure,
+	}
 }

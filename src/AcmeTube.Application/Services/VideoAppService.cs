@@ -8,6 +8,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using AcmeTube.Application.Core.Commands;
+using AcmeTube.Commons.Models;
 
 namespace AcmeTube.Application.Services
 {
@@ -29,7 +30,7 @@ namespace AcmeTube.Application.Services
 			return Response.From<Video, VideoResponseData>(result, Mapper);
 		}
 
-		public async ValueTask<Response<VideoResponseData>> CreateAsync(VideoForCreationRequest request, FileRequest file, CancellationToken cancellationToken)
+		public async ValueTask<Response<VideoResponseData>> CreateAsync(VideoForCreationRequest request, FileUploaded file, CancellationToken cancellationToken)
 		{
 			var command = new CreateVideo.Command(
 				request.Title,
@@ -37,7 +38,7 @@ namespace AcmeTube.Application.Services
 				request.ChannelId,
 				request.Tags,
 				request.IsPublic,
-				file.Content);
+				file);
 
 			return Response.From<Video, VideoResponseData>(await Sender.Send(command, cancellationToken), Mapper);
 		}

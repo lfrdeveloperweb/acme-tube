@@ -17,9 +17,7 @@ namespace AcmeTube.Application.Core.Commands
     {
         static CommandValidator()
         {
-            // ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Stop;
-
-            ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
         }
 
         /// <summary>

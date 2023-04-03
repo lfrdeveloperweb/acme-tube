@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dropbox.Api" Version="6.37.0" />
     <PackageReference Include="Hashids.net" Version="1.6.1" />
     <PackageReference Include="IdentityModel" Version="6.0.0" />
     <PackageReference Include="MediaToolkit.Standard" Version="1.5.0" />

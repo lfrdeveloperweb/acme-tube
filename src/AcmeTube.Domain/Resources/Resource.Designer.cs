@@ -59,5 +59,23 @@ namespace AcmeTube.Domain.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O tamanho máximo do arquivo é de {0} mebabytes..
+        /// </summary>
+        internal static string FileExceedsMaximumSizeInMegabytes {
+            get {
+                return ResourceManager.GetString("FileExceedsMaximumSizeInMegabytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formato do arquivo não suportado. Utilize um dos segintes formatos: {0}..
+        /// </summary>
+        internal static string UnsupportedContentType {
+            get {
+                return ResourceManager.GetString("UnsupportedContentType", resourceCulture);
+            }
+        }
     }
 }

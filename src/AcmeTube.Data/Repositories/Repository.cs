@@ -1,4 +1,9 @@
-﻿using System;
+﻿using AcmeTube.Data.TypeHandlers;
+using AcmeTube.Domain.Commons;
+using Dapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -6,12 +11,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AcmeTube.Data.TypeHandlers;
-using AcmeTube.Domain.Commons;
-using AcmeTube.Domain.Models;
-using Dapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace AcmeTube.Data.Repositories
 {
@@ -122,16 +121,8 @@ namespace AcmeTube.Data.Repositories
 
         protected DbSet<TEntity> DbSet { get; }
 
-        public virtual async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellationToken)
-        {
-	        var playlist = Context
-		        .Set<Playlist>()
-		        .OfType<ChannelPlaylist>()
-		        .AsSplitQuery()
-		        .ToList();
-
-	        return await DbSet.FindAsync(new object[] { id }, cancellationToken);
-        }
+        public virtual async Task<TEntity> GetByIdAsync(string id, CancellationToken cancellationToken) => 
+	        await DbSet.FindAsync(new object[] { id }, cancellationToken);
 
         protected async Task<PaginatedResult<T>> ListPaginatedAsync<T>(IQueryable<T> query, PagingParameters pagingParameters, CancellationToken cancellationToken) =>
 	        PaginatedResult<T>.Create(
