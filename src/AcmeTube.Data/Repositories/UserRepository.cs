@@ -1,51 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
-using AcmeTube.Application.Repositories;
+﻿using AcmeTube.Application.Repositories;
 using AcmeTube.Data.Contexts;
-using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AcmeTube.Domain.Security;
 using AcmeTube.Domain.Specs.Core;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcmeTube.Data.Repositories;
 
 public sealed class UserRepository : Repository<User>, IUserRepository
 {
-	private const string BaseSelectCommandText = @"
-            SELECT u.user_id as id
-                 , u.name
-                 , u.birth_date
-                 , u.email
-                 , u.email_confirmed
-	             , u.phone_number
-                 , u.phone_number_confirmed
-	             , u.role_id as role
-                 , u.user_name
-	             , u.password_hash
-	             , u.last_login_at
-                 , u.login_count
-                 , u.access_failed_count
-                 , u.locked_at
-                 , u.created_at
-                 , u.updated_at
-                 , creator.user_id as id
-                 , creator.name
-                 , modifier.user_id as id
-                 , modifier.name
-              FROM ""user"" u
-         LEFT JOIN ""user"" creator
-                ON creator.user_id = u.created_by
-         LEFT JOIN ""user"" modifier
-                ON modifier.user_id = u.updated_by";
-
-	// public UserRepository(IDbConnector dbConnector) : base(dbConnector) { }
-
 	public UserRepository(MainContext context) : base(context) { }
 
 	public async Task<User> GetAsync(Specification<User> spec, CancellationToken cancellationToken)
@@ -54,9 +21,6 @@ public sealed class UserRepository : Repository<User>, IUserRepository
 	}
 
 	/// <inheritdoc />
-	public Task<User> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-		DbSetAsNoTracking.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
 	public Task<User> GetByDocumentNumberAsync(string documentNumber, CancellationToken cancellationToken) =>
 		DbSetAsNoTracking.FirstOrDefaultAsync(x => x.DocumentNumber == documentNumber, cancellationToken);
 
@@ -77,20 +41,6 @@ public sealed class UserRepository : Repository<User>, IUserRepository
 
 	public Task<bool> ExistByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken) =>
 		ExistsByExpressionAsync(it => it.PhoneNumber == phoneNumber, cancellationToken);
-
-	public Task CreateAsync(User user, CancellationToken cancellationToken)
-	{
-		DbSet.Add(user);
-
-		return Task.CompletedTask;
-	}
-
-	public Task UpdateAsync(User user, CancellationToken cancellationToken)
-	{
-		DbSet.Update(user);
-
-		return Task.CompletedTask;
-	}
 
 	public Task ChangePasswordAsync(User user, CancellationToken cancellationToken)
 	{
@@ -142,7 +92,8 @@ public sealed class UserRepository : Repository<User>, IUserRepository
 		return ExistsWithTransactionAsync(commandText, new { UserId = userId, Type = type, Value = value });
 	}
 
-	public Task CreateUserTokenAsync<TUserTokenData>(UserToken<TUserTokenData> userToken) where TUserTokenData : IUserTokenData
+	public Task CreateUserTokenAsync<TUserTokenData>(UserToken<TUserTokenData> userToken, CancellationToken cancellationToken) 
+		where TUserTokenData : IUserTokenData
 	{
 		const string commandText = @"
             INSERT INTO user_token (user_id, type, value, data, expires_at)                
@@ -160,7 +111,7 @@ public sealed class UserRepository : Repository<User>, IUserRepository
 			Value = userToken.Value,
 			Data = userToken.Data,
 			ExpiratesAt = userToken.ExpiresAt
-		});
+		}, cancellationToken);
 	}
 
 	public Task DeleteTokenAsync(string userId, UserTokenType tokenType)

@@ -10,6 +10,8 @@ using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
+using AcmeTube.Domain.Events;
+using MediatR;
 
 namespace AcmeTube.Application.Features.Accounts
 {
@@ -21,6 +23,7 @@ namespace AcmeTube.Application.Features.Accounts
 		{
 			private readonly ISecurityService _securityService;
 			private readonly IJwtProvider _jwtProvider;
+			private readonly IPublisher _publisher;
 			private readonly ISystemClock _systemClock;
 
 			public CommandHandler(
@@ -29,10 +32,12 @@ namespace AcmeTube.Application.Features.Accounts
 				ICommandValidator<Command> validator,
 				ISecurityService securityService,
 				IJwtProvider jwtProvider,
+				IPublisher publisher,
 				ISystemClock systemClock) : base(loggerFactory, unitOfWork, validator)
 			{
 				_securityService = securityService;
 				_jwtProvider = jwtProvider;
+				_publisher = publisher;
 				_systemClock = systemClock;
 			}
 
@@ -47,14 +52,10 @@ namespace AcmeTube.Application.Features.Accounts
 				if (!signInResult.Succeeded)
 				{
 					if (signInResult.IsEmailConfirmed)
-					{
 						return CommandResult.Unauthorized<CommandResult<JwtToken>>(ReportCodeType.EmailNotConfirmed);
-					}
 
 					if (signInResult.IsPhoneNumberConfirmed)
-					{
 						return CommandResult.Unauthorized<CommandResult<JwtToken>>(ReportCodeType.PhoneNumberNotConfirmed);
-					}
 
 					if (signInResult.IsLockedOut)
 					{
@@ -66,10 +67,10 @@ namespace AcmeTube.Application.Features.Accounts
 					}
 
 					user.IncreaseAccessFailedCount();
-                
+
 					await UnitOfWork.UserRepository.UpdateAsync(user, cancellationToken);
 
-					//await _mediator.Publish(new UserLoginFailedEvent(user.Id, request.Data.Login));
+					await _publisher.Publish(new UserLoginFailedEvent(user.Id, command.Email), cancellationToken);
 
 					return CommandResult.Unauthorized<CommandResult<JwtToken>>();
 				}
@@ -81,7 +82,7 @@ namespace AcmeTube.Application.Features.Accounts
 
 				await UnitOfWork.UserRepository.UpdateAsync(user, cancellationToken);
 
-				// await _mediator.Publish(new UserLoginEvent(user.Id));
+				await _publisher.Publish(new UserLoginEvent(user.Id), cancellationToken);
 
 				return CommandResult.Ok(jwtToken);
 			}

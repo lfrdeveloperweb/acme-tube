@@ -20,7 +20,8 @@ internal sealed class PlaylistMapper : IEntityTypeConfiguration<Playlist>
 			.HasColumnName("playlist_id")
 			.ValueGeneratedNever();
 
-		// Many x Many
+		// Many x Many.
+		// Ref: https://github.com/dotnet/efcore/issues/29563
 		builder
 			.HasMany(it => it.Videos)
 			.WithMany()

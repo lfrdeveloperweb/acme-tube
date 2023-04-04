@@ -1,5 +1,4 @@
-﻿using System.IO;
-using AcmeTube.Api.Constants;
+﻿using AcmeTube.Api.Constants;
 using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.Services;
 using AcmeTube.Domain.Commons;
@@ -8,9 +7,9 @@ using AcmeTube.Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System;
 
 namespace AcmeTube.Api.Controllers
 {
@@ -19,18 +18,13 @@ namespace AcmeTube.Api.Controllers
     public sealed class VideoController : ApiController
     {
         private readonly VideoAppService _service;
-        private readonly IMediaService _mediaService;
 
-        public VideoController(VideoAppService service, IMediaService mediaService)
-        {
-	        _service = service;
-	        _mediaService = mediaService;
-        }
+        public VideoController(VideoAppService service) => _service = service;
 
         /// <summary>
         /// Get task by id.
         /// </summary>
-        [HasPermission(PermissionType.VideoFull)]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id, CancellationToken cancellationToken) =>
             BuildActionResult(await _service
@@ -40,7 +34,6 @@ namespace AcmeTube.Api.Controllers
         /// <summary>
         /// Search task by filter.
         /// </summary>
-        //[ResourceAuthorization(PermissionType.VideoRead)]
         [AllowAnonymous]
         [HttpPost("search")]
         public async Task<IActionResult> Search(PagingParameters pagingParameters, CancellationToken cancellationToken) =>
@@ -49,34 +42,32 @@ namespace AcmeTube.Api.Controllers
                 .ConfigureAwait(false));
        
         [Consumes(ApplicationConstants.ContentTypes.FormData)]
+        //[HasPermission(PermissionType.VideoFull)]
+        [HasPermission(PermissionType.VideoCreate)]
 		[HttpPost]
         public async Task<IActionResult> Create([FromForm] VideoForCreationRequest request, IFormFile file, CancellationToken cancellationToken)
         {
 	        if (request == null || file == null || file.Length == 0) 
 		        return BadRequest();
 
-	        var fileRequest = await GetFileAsync(file);
-
-	        var result = await _mediaService.GetVideoMetadata(fileRequest.Content, Path.GetExtension(file.FileName));
-
-
-
-			
-
+	        var fileUploaded = await GetFileAsync(file);
+            
 			return BuildActionResult(await _service
-		        .CreateAsync(request, fileRequest, cancellationToken)
+		        .CreateAsync(request, fileUploaded, cancellationToken)
 		        .ConfigureAwait(false));
         }
 
-        [HttpPut("{id}")]
+        [HasPermission(PermissionType.VideoUpdate)]
+		[HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] VideoForUpdateRequest request, CancellationToken cancellationToken) =>
             BuildActionResult(await _service.UpdateAsync(id, request, cancellationToken).ConfigureAwait(false));
 
-        [HttpDelete("{id}")]
+        [HasPermission(PermissionType.VideoDelete)]
+		[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
             BuildActionResult(await _service.DeleteAsync(id, cancellationToken).ConfigureAwait(false));
 
-		[HttpPost("{id}/rate/like")]
+        [HttpPost("{id}/rate/like")]
 		[HttpPost("{id}/rate/dislike")]
 		public async Task<IActionResult> PostRatingVideo(string id, CancellationToken cancellationToken) =>
 			BuildActionResult(await _service.CreateRatingAsync(id, Request!.Path!.Value!.EndsWith("/like", StringComparison.OrdinalIgnoreCase), cancellationToken).ConfigureAwait(false));

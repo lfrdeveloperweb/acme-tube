@@ -36,7 +36,7 @@ namespace AcmeTube.Infrastructure.Services
 		/// </summary>
 		protected override string ServiceName => "Dropbox";
 
-		public async Task<ProcessResult<Attachment>> UploadFileAsync(string fullName, byte[] fileContent)
+		public async Task<ProcessResult<FileUploaderResult>> UploadFileAsync(string fullName, byte[] fileContent)
 		{
 			try
 			{
@@ -51,7 +51,7 @@ namespace AcmeTube.Infrastructure.Services
 				//var attachment = _mapper.Map<Attachment>(fileMetadata);
 				//attachment.Url = sharedLinkMetadata.Url;
 
-				return ProcessResult.Success(new Attachment(
+				return ProcessResult.Success(new FileUploaderResult(
 					fileMetadata.Id,
 					fileMetadata.PathLower,
 					ContentType: "",
@@ -63,7 +63,7 @@ namespace AcmeTube.Infrastructure.Services
 			{
 				Logger.LogError(ex, "Failed to upload file '{FullName}'.", fullName);
 
-				return ProcessResult.Failure<Attachment>(ReportCodeType.DropboxFailure);
+				return ProcessResult.Failure<FileUploaderResult>(ReportCodeType.DropboxFailure);
 			}
 		}
 
@@ -88,7 +88,7 @@ namespace AcmeTube.Infrastructure.Services
 		/// </summary>
 		/// <param name="fileId">Identifier of file</param>
 		/// <returns>Instance of <see cref="ProcessResult"/>.</returns>
-		public async Task<ProcessResult<Attachment>> DeleteFileAsync(string fileId)
+		public async Task<ProcessResult<FileUploaderResult>> DeleteFileAsync(string fileId)
 		{
 			try
 			{
@@ -96,17 +96,17 @@ namespace AcmeTube.Infrastructure.Services
 
 				// if(deleteResult.Metadata.As)
 
-				return ProcessResult.Success(_mapper.Map<Attachment>(deleteResult.Metadata.AsFile));
+				return ProcessResult.Success(_mapper.Map<FileUploaderResult>(deleteResult.Metadata.AsFile));
 			}
 			catch (ApiException<DeleteError> ex) when (ex.ErrorResponse.AsPathLookup.Value.IsNotFound)
 			{
-				return ProcessResult.Failure<Attachment>(ReportCodeType.ResourceNotFound);
+				return ProcessResult.Failure<FileUploaderResult>(ReportCodeType.ResourceNotFound);
 			}
 			catch (Exception ex)
 			{
 				Logger.LogError(ex, "Failed to try delete file '{FileId}'.", fileId);
 
-				return ProcessResult.Failure<Attachment>(ReportCodeType.DropboxFailure);
+				return ProcessResult.Failure<FileUploaderResult>(ReportCodeType.DropboxFailure);
 			}
 		}
 

@@ -1,6 +1,4 @@
-﻿using AcmeTube.Api.Extensions;
-using AcmeTube.Api.Services;
-using AcmeTube.Application.DataContracts.Requests;
+﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.Services;
 using AcmeTube.Domain.Commons;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +32,7 @@ public sealed class ChannelController : ApiController
 	[AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id, CancellationToken cancellationToken) =>
-        (await _service.GetAsync(id, cancellationToken).ConfigureAwait(false)).BuildActionResult();
+		BuildActionResult(await _service.GetAsync(id, cancellationToken).ConfigureAwait(false));
 
     /// <summary>
     /// Search task by filter.

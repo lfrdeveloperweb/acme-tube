@@ -1,14 +1,13 @@
 ﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.DataContracts.Responses;
 using AcmeTube.Application.Features.Videos;
+using AcmeTube.Commons.Models;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using AcmeTube.Application.Core.Commands;
-using AcmeTube.Commons.Models;
 
 namespace AcmeTube.Application.Services
 {

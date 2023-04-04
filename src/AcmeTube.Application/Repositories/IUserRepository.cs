@@ -36,7 +36,8 @@ namespace AcmeTube.Application.Repositories
 
 		Task<bool> ExistsAsync(string userId, UserTokenType type, string value);
 
-		Task CreateUserTokenAsync<TUserTokenData>(UserToken<TUserTokenData> userToken) where TUserTokenData : IUserTokenData;
+		Task CreateUserTokenAsync<TUserTokenData>(UserToken<TUserTokenData> userToken, CancellationToken cancellationToken) 
+			where TUserTokenData : IUserTokenData;
 
 		Task DeleteTokenAsync(string userId, UserTokenType tokenType);
 

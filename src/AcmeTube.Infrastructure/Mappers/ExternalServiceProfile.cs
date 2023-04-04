@@ -17,7 +17,7 @@ namespace AcmeTube.Infrastructure.Mappers
 		private void DropboxMaps()
 		{
 			// Response
-			CreateMap<FileMetadata, Attachment>()
+			CreateMap<FileMetadata, FileUploaderResult>()
 				.ForMember(target => target.FileName, option => option.MapFrom(source => source.Name))
 				.ForMember(target => target.FullName, option => option.MapFrom(source => source.PathLower));
 		}

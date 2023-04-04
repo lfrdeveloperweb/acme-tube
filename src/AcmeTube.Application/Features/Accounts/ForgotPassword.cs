@@ -19,47 +19,31 @@ namespace AcmeTube.Application.Features.Accounts
 {
     public static class ForgotPassword
     {
-        public record Command(string DocumentNumber) : Command<CommandResult>;
+        public sealed record Command(string DocumentNumber) : Command<CommandResult>;
 
         internal sealed class CommandHandler : CommandHandler<Command>
         {
             private readonly IPublisher _bus;
             private readonly ISecurityService _securityService;
-            private readonly IKeyGenerator _keyGenerator;
-            private readonly ISystemClock _systemClock;
-            private readonly AccountSettings _accountSettings;
 
             public CommandHandler(
                 ILoggerFactory loggerFactory,
                 IUnitOfWork unitOfWork,
                 IPublisher bus,
-                ISecurityService securityService,
-                IKeyGenerator keyGenerator,
-                ISystemClock systemClock,
-                IOptionsSnapshot<AccountSettings> accountSettings) : base(loggerFactory, unitOfWork)
+                ISecurityService securityService) : base(loggerFactory, unitOfWork)
             {
-                _bus = bus;
-                _securityService = securityService;
-                _keyGenerator = keyGenerator;
-                _systemClock = systemClock;
-                _accountSettings = accountSettings.Value;
+	            _bus = bus;
+	            _securityService = securityService;
             }
 
             protected override async Task<CommandResult> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
             {
-                var user = await UnitOfWork.UserRepository.GetByDocumentNumberAsync(command.DocumentNumber, cancellationToken);
-                if (user is null) return CommandResult.NotFound();
+                if (await UnitOfWork.UserRepository.GetByDocumentNumberAsync(command.DocumentNumber, cancellationToken) is not { } user) 
+					return CommandResult.NotFound();
 
-                var userToken = new UserToken<UserResetPasswordTokenData>(
-                    userId: user.Id,
-                    value: _keyGenerator.Generate(),
-                    expiresAt: _systemClock.UtcNow.AddMinutes(_accountSettings.PasswordResetTokenExpirationInMinutes),
-                    type: UserTokenType.ResetPasswordToken,
-                    data: user.Email);
+                var token = await _securityService.GeneratePasswordResetTokenAsync(user, cancellationToken);
 
-                await UnitOfWork.UserRepository.CreateUserTokenAsync(userToken);
-
-                await _bus.Publish(new ForgotPasswordEvent(command.DocumentNumber, userToken.Value), cancellationToken);
+                await _bus.Publish(new ForgotPasswordEvent(user.DocumentNumber, user.Email, token), cancellationToken);
 
                 return CommandResult.NoContent();
             }

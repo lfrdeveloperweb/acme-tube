@@ -1,5 +1,7 @@
 ﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.Services;
+using AcmeTube.Domain.Security;
+using AcmeTube.Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
@@ -27,7 +29,9 @@ public sealed class AccountController : ApiController
         BuildActionResult(await _service.LoginAsync(request, cancellationToken).ConfigureAwait(false));
 
     [Authorize]
-    [HttpGet("profile")]
+	//[ResourceAuthorization(PermissionType.ChannelFull, PermissionType.ChannelCreate)]
+	[HasPermission(PermissionType.UserRead)]
+	[HttpGet("profile")]
     public async Task<IActionResult> ProfileAsync(CancellationToken cancellationToken) =>
         BuildActionResult(await _service.GetProfileAsync(OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
 

@@ -11,7 +11,7 @@ namespace AcmeTube.Application.Services
 		/// <param name="fullName">Full name to storage file</param>
 		/// <param name="fileContent">The stream to read the data from.</param>
 		/// <returns>Instance of <see cref="ProcessResult"/> with url of file.</returns>
-		Task<ProcessResult<Attachment>> UploadFileAsync(string fullName, byte[] fileContent);
+		Task<ProcessResult<FileUploaderResult>> UploadFileAsync(string fullName, byte[] fileContent);
 
 		/// <summary>
 		/// Download of file.
@@ -25,6 +25,6 @@ namespace AcmeTube.Application.Services
 		/// </summary>
 		/// <param name="fileId">Identifier of file</param>
 		/// <returns>Instance of <see cref="ProcessResult"/>.</returns>
-		Task<ProcessResult<Attachment>> DeleteFileAsync(string fileId);
+		Task<ProcessResult<FileUploaderResult>> DeleteFileAsync(string fileId);
 	}
 }

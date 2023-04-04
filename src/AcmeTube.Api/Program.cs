@@ -24,6 +24,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using AcmeTube.Infrastructure.Security;
+using Microsoft.AspNetCore.Authorization;
 
 IdentityModelEventSource.ShowPII = true;
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
