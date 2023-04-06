@@ -30,6 +30,7 @@ using System.Configuration;
 using AcmeTube.Api.DependencyInjection;
 using AcmeTube.Application.DependencyInjection;
 using AcmeTube.Infrastructure.DependencyInjection;
+using Microsoft.AspNetCore.StaticFiles;
 
 IdentityModelEventSource.ShowPII = true;
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -112,6 +113,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddOptions();
 builder.Services.AddMemoryCache();
+
+builder.Services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
 
 builder.Services.ConfigureOptions<SettingsSetup>();
 builder.Services.ConfigureOptions<JwtBearerSettingsSetup>();

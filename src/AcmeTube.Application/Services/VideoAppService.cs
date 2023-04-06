@@ -1,7 +1,6 @@
 ﻿using AcmeTube.Application.DataContracts.Requests;
 using AcmeTube.Application.DataContracts.Responses;
 using AcmeTube.Application.Features.Videos;
-using AcmeTube.Commons.Models;
 using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 using AutoMapper;
@@ -29,7 +28,7 @@ namespace AcmeTube.Application.Services
 			return Response.From<Video, VideoResponseData>(result, Mapper);
 		}
 
-		public async ValueTask<Response<VideoResponseData>> CreateAsync(VideoForCreationRequest request, FileUploaded file, CancellationToken cancellationToken)
+		public async ValueTask<Response<VideoResponseData>> CreateAsync(VideoForCreationRequest request, FileMetadata file, CancellationToken cancellationToken)
 		{
 			var command = new CreateVideo.Command(
 				request.Title,
@@ -62,6 +61,9 @@ namespace AcmeTube.Application.Services
 
 		public async ValueTask<Response> DeleteRatingAsync(string videoId, CancellationToken cancellationToken) =>
 			Response.From(await Sender.Send(new DeleteRatingVideo.Command(videoId), cancellationToken));
+
+		public async ValueTask<Response<FileDownloadResponse>> DownloadAsync(string videoId, CancellationToken cancellationToken) =>
+			Response.From<FileMetadata, FileDownloadResponse>(await Sender.Send(new DownloadVideo.Command(videoId), cancellationToken), Mapper);
 
 		public async Task<PaginatedResponse<VideoCommentResponseData>> SearchCommentsAsync(string videoId, PagingParameters pagingParameters, CancellationToken cancellationToken)
 		{

@@ -74,6 +74,15 @@ namespace AcmeTube.Api.Controllers
 		[HttpDelete("{id}/rate")]
 		public async Task<IActionResult> DeleteRatingVideo(string id, CancellationToken cancellationToken) =>
 			BuildActionResult(await _service.DeleteRatingAsync(id, cancellationToken).ConfigureAwait(false));
+        
+		[HttpGet("{id}/download")]
+		public async Task<IActionResult> Download(string id, CancellationToken cancellationToken)
+		{
+			var response = await _service.DownloadAsync(id, cancellationToken).ConfigureAwait(false);
+			if (!response.IsSuccessStatusCode) return BuildActionResult(response);
+            
+			return File(response.Data.Content, response.Data.ContentType, response.Data.Name);
+		}
 
 		/// <summary>
 		/// Search comments by filter.

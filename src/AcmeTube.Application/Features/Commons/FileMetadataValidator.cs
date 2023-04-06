@@ -1,20 +1,20 @@
 ﻿using AcmeTube.Application.Extensions;
-using AcmeTube.Commons.Models;
 using AcmeTube.Domain.Resources;
 using FluentValidation;
 using Humanizer;
 using System.Collections.Generic;
+using AcmeTube.Domain.Commons;
 
 namespace AcmeTube.Application.Features.Commons
 {
-	internal sealed class FileUploadValidator : AbstractValidator<FileUploaded>
+	internal sealed class FileMetadataValidator : AbstractValidator<FileMetadata>
 	{
 		private readonly ICollection<string> _supportedContentTypes;
 		private readonly long _maximumSizeInMegabytes;
 
-		public FileUploadValidator(ICollection<string> supportedContentTypes, int maximumSizeInMegabytes)
+		public FileMetadataValidator(ICollection<string> supportedContentTypes, int maximumSizeInMegabytes)
 		{
-			//RuleLevelCascadeMode = CascadeMode.Stop;
+			RuleLevelCascadeMode = CascadeMode.Stop;
 
 			_supportedContentTypes = supportedContentTypes;
 			_maximumSizeInMegabytes = maximumSizeInMegabytes;

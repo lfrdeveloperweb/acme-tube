@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AcmeTube.Domain.Commons;
@@ -118,14 +119,20 @@ namespace AcmeTube.Application.Core.Commands
         /// Create instance of <see cref="CommandResult"/> with property status code 422 Unprocessable entity.
         /// </summary>
         /// <returns>Instance of <see cref="CommandResult"/></returns>
-        public static CommandResult UnprocessableEntity(params Report[] reports)
+        public static CommandResult UnprocessableEntity(ICollection<Report> reports)
         {
-            return new CommandResult
-            {
-                StatusCode = StatusCodes.Status422UnprocessableEntity,
-                Reports = reports
-            };
+	        return new CommandResult
+	        {
+		        StatusCode = StatusCodes.Status422UnprocessableEntity,
+		        Reports = reports
+	        };
         }
+
+		/// <summary>
+		/// Create instance of <see cref="CommandResult"/> with property status code 422 Unprocessable entity.
+		/// </summary>
+		/// <returns>Instance of <see cref="CommandResult"/></returns>
+		public static CommandResult UnprocessableEntity(params Report[] reports) => UnprocessableEntity(reports.ToList());
 
         /// <summary>
         /// Create instance of <see cref="CommandResult"/> with property status code 422 Unprocessable entity.

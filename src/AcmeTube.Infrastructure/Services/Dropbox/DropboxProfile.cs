@@ -1,6 +1,7 @@
 ﻿using AcmeTube.Domain.Commons;
 using AutoMapper;
 using Dropbox.Api.Files;
+using FileMetadata = Dropbox.Api.Files.FileMetadata;
 
 namespace AcmeTube.Infrastructure.Services.Dropbox
 {

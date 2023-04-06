@@ -14,18 +14,18 @@ namespace AcmeTube.Application.Features.Videos
 
         public sealed class QueryHandler : IQueryHandler<Query, QueryResult<Video>>
         {
-            private readonly IVideoRepository _videoRepository;
+            private readonly IUnitOfWork _unitOfWork;
             private readonly IPublisher _publisher;
 
-            public QueryHandler(IVideoRepository videoRepository, IPublisher publisher)
+            public QueryHandler(IUnitOfWork unitOfWork, IPublisher publisher)
             {
-	            _videoRepository = videoRepository;
+	            _unitOfWork = unitOfWork;
 	            _publisher = publisher;
             }
 
             public async Task<QueryResult<Video>> Handle(Query query, CancellationToken cancellationToken)
             {
-	            if (await _videoRepository.GetByIdAsync(query.Id, cancellationToken) is not { } video)
+	            if (await _unitOfWork.VideoRepository.GetByIdAsync(query.Id, cancellationToken) is not { } video)
 		            return QueryResult.NotFound<Video>();
 
 	            await _publisher.Publish(new VideoViewedEvent(query.Id, query.Context.Identity), cancellationToken);

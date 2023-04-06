@@ -1,9 +1,9 @@
 ﻿using AcmeTube.Application.DataContracts.Responses;
-using AcmeTube.Commons.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
+using AcmeTube.Domain.Commons;
 
 namespace AcmeTube.Api.Controllers
 {
@@ -31,7 +31,7 @@ namespace AcmeTube.Api.Controllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        protected static async Task<FileUploaded> GetFileAsync(IFormFile file)
+        protected static async Task<FileMetadata> GetFileAsync(IFormFile file)
         {
 	        using var stream = new MemoryStream();
 	        

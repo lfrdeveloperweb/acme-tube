@@ -9,6 +9,7 @@
     tags                    json            NULL,
     --status_id               int2            NOT NULL,
     video_file_path         varchar(256)    NULL,
+    video_content_type      varchar(32)     NULL,
     video_url               url             NULL,
     video_external_id       varchar(36)     NULL,
     thumbnail_file_path     varchar(256)    NULL,

@@ -20,6 +20,7 @@ public sealed class Video : EntityBase
 	public string VideoFilePath { get; set; }
 	public string VideoUrl { get; set; }
 	public string VideoExternalId { get; set; }
+	public string VideoContentType { get; set; }
 	public string ThumbnailFilePath { get; set; }
 	public string ThumbnailUrl { get; set; }
 	public string ThumbnailExternalId { get; set; }

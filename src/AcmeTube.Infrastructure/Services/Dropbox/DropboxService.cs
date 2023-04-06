@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace AcmeTube.Infrastructure.Services.Dropbox;
 
-public sealed class DropboxService : ExternalService, IFileStorageService, IHealthCheck
+public sealed class DropboxService : ExternalService, IHealthCheck //, IFileStorageService
 {
 	private readonly IMapper _mapper;
 	private readonly DropboxClient _client;
@@ -39,10 +39,12 @@ public sealed class DropboxService : ExternalService, IFileStorageService, IHeal
 	{
 		try
 		{
+			using var file = new MemoryStream(fileContent);
+
 			var fileMetadata = await _client.Files.UploadAsync(
 				path: path,
 				mode: WriteMode.Overwrite.Instance,
-				body: new MemoryStream(fileContent));
+				body: file);
 
 			//await _client.Sharing.GetSharedLinkFileAsync(new GetSharedLinkMetadataArg(fileMetadata.PathLower));
 

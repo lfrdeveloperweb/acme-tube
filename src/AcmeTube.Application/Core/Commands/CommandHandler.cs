@@ -34,7 +34,12 @@ namespace AcmeTube.Application.Core.Commands
 
         protected IMapper Mapper { get; }
 
-        public async Task<TCommandResult> Handle(TCommand command, CancellationToken cancellationToken)
+        /// <summary>
+        /// If true, ignore global transaction.
+        /// </summary>
+        protected virtual bool IgnoreGlobalTransaction => false;
+
+		public async Task<TCommandResult> Handle(TCommand command, CancellationToken cancellationToken)
         {
             var commandResult = new TCommandResult();
 
@@ -51,17 +56,24 @@ namespace AcmeTube.Application.Core.Commands
                     }
                 }
 
-                UnitOfWork.BeginTransaction();
-
-                commandResult = await ProcessCommandAsync(command, cancellationToken).ConfigureAwait(false);
-                if (commandResult.IsSuccessStatusCode)
+                if (IgnoreGlobalTransaction)
                 {
-                    await UnitOfWork.CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
-                }
+	                commandResult = await ProcessCommandAsync(command, cancellationToken).ConfigureAwait(false);
+				}
                 else
                 {
-                    UnitOfWork.RollbackTransaction();
-                }
+	                UnitOfWork.BeginTransaction();
+
+	                commandResult = await ProcessCommandAsync(command, cancellationToken).ConfigureAwait(false);
+	                if (commandResult.IsSuccessStatusCode)
+	                {
+		                await UnitOfWork.CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
+	                }
+	                else
+	                {
+		                UnitOfWork.RollbackTransaction();
+	                }
+				}
             }
             //catch (AbortCommandException ex)
             //{
@@ -75,9 +87,12 @@ namespace AcmeTube.Application.Core.Commands
             {
                 Logger.LogError(ex, ex.Message);
 
-                UnitOfWork?.RollbackTransaction();
+				if (!IgnoreGlobalTransaction)
+				{
+					UnitOfWork?.RollbackTransaction();
+				}
 
-                commandResult = CommandResult.InternalServerError<TCommandResult>(ex);
+				commandResult = CommandResult.InternalServerError<TCommandResult>(ex);
             }
             finally
             {

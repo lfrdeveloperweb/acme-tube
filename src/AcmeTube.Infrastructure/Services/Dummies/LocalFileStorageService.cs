@@ -77,7 +77,9 @@ public sealed class LocalFileStorageService : ExternalService, IFileStorageServi
     {
         try
         {
-            return ProcessResult.Success(await _fileSystem.File.ReadAllBytesAsync(path, cancellationToken));
+	        var fileInfo = _fileSystem.FileInfo.FromFileName(Path.Combine(RootStoragePath, path.TrimStart('/')));
+
+			return ProcessResult.Success(await _fileSystem.File.ReadAllBytesAsync(fileInfo.FullName, cancellationToken));
         }
         catch (Exception ex)
         {

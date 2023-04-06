@@ -86,7 +86,7 @@ namespace AcmeTube.Application.DataContracts
                 : base(data, statusCode, reports) { }
         }
 
-        public record PaginatedResponse<TData> : Response<IEnumerable<TData>>
+        public sealed record PaginatedResponse<TData> : Response<IEnumerable<TData>>
         {
             public PaginatedResponse() { }
 
@@ -104,6 +104,14 @@ namespace AcmeTube.Application.DataContracts
         /// </summary>
         /// <param name="Id">Identifier of domain.</param>
         /// <param name="Name">Name</param>
-        public record IdentityNamedResponse(string Id, string Name);
+        public sealed record IdentityNamedResponse(string Id, string Name);
+
+        /// <summary>
+        /// Represent the operation contract to upload of a file.
+        /// </summary>
+        /// <param name="Name">File name.</param>
+        /// <param name="ContentType">Content type of file.</param>
+        /// <param name="Content">File content.</param>
+        public record FileDownloadResponse(string Name, string ContentType, byte[] Content);
     }
 }

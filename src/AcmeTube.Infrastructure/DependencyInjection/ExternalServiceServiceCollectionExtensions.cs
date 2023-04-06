@@ -1,13 +1,9 @@
-﻿using AcmeTube.Application.Core.Commons;
-using AcmeTube.Application.Services;
-using AcmeTube.Infrastructure.Services;
+﻿using AcmeTube.Application.Services;
 using AcmeTube.Infrastructure.Services.Dummies;
 using AcmeTube.Infrastructure.Settings;
-using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace AcmeTube.Infrastructure.DependencyInjection;
 
