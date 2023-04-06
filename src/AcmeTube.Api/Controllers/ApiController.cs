@@ -1,5 +1,4 @@
 ﻿using AcmeTube.Application.DataContracts.Responses;
-using AcmeTube.Application.Services;
 using AcmeTube.Commons.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +9,6 @@ namespace AcmeTube.Api.Controllers
 {
     public abstract class ApiController : ControllerBase
     {
-        protected ApiController(IOperationContextManager operationContextManager = null)
-        {
-            OperationContextManager = operationContextManager;
-        }
-
-        protected IOperationContextManager OperationContextManager { get; }
-
         [NonAction]
         protected IActionResult BuildActionResult<TResponse>(TResponse response) where TResponse : Response =>
             response.StatusCode switch
@@ -45,7 +37,7 @@ namespace AcmeTube.Api.Controllers
 	        
 	        await file.CopyToAsync(stream);
 
-	        return new (file.Name, file.ContentType, file.Length, stream.ToArray());
+	        return new (file.FileName, file.ContentType, file.Length, stream.ToArray());
         }
 	}
 }

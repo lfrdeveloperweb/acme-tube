@@ -39,14 +39,8 @@ namespace AcmeTube.Application.Services
 			return Response.From<JwtToken, JwtTokenResponseData>(await Sender.Send(command, cancellationToken), Mapper);
 		}
     
-		public async ValueTask<Response<UserResponseData>> GetProfileAsync(OperationContext context, CancellationToken cancellationToken) => 
+		public async ValueTask<Response<UserResponseData>> GetProfileAsync(CancellationToken cancellationToken) => 
 			Response.From<User, UserResponseData>(await Sender.Send(new GetUserDetails.Query(), cancellationToken), Mapper);
-
-		public async ValueTask<Response> LockAccountAsync(string userId, CancellationToken cancellationToken) => 
-			Response.From(await Sender.Send(new LockAccount.Command(userId), cancellationToken));
-
-		public async ValueTask<Response> UnlockAccountAsync(string userId, CancellationToken cancellationToken) => 
-			Response.From(await Sender.Send(new UnlockAccount.Command(userId), cancellationToken));
 
 		public async ValueTask<Response> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken) => 
 			Response.From(await Sender.Send(new ForgotPassword.Command(request.DocumentNumber), cancellationToken));

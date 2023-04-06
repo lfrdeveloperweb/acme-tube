@@ -7,9 +7,9 @@ namespace AcmeTube.Infrastructure.Services;
 /// </summary>
 public abstract class ExternalService
 {
-	protected ExternalService(ILogger logger)
+	protected ExternalService(ILoggerFactory loggerFactory)
 	{
-		Logger = logger;
+		Logger = loggerFactory.CreateLogger(GetType());
 	}
 
 	/// <summary>

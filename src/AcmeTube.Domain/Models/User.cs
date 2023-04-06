@@ -26,12 +26,9 @@ namespace AcmeTube.Domain.Models
 
         public DateTimeOffset? LastLoginAt { get; private set; }
 
-        public void ConfirmEmail()
-        {
-            EmailConfirmed = true;
-        }
+        public void ConfirmEmail() => EmailConfirmed = true;
 
-        public void ChangePassword(string passwordHashed) => PasswordHash = passwordHashed;
+        public void SetPassword(string passwordHashed) => PasswordHash = passwordHashed;
 
         public void IncreaseAccessCount(DateTimeOffset loginAt)
         {

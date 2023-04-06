@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AcmeTube.Domain.Commons;
 using AcmeTube.Domain.Models;
 
 namespace AcmeTube.Application.Core.Security

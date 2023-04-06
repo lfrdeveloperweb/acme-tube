@@ -25,9 +25,12 @@ namespace AcmeTube.Application.Features.Videos
 
             public async Task<QueryResult<Video>> Handle(Query query, CancellationToken cancellationToken)
             {
+	            if (await _videoRepository.GetByIdAsync(query.Id, cancellationToken) is not { } video)
+		            return QueryResult.NotFound<Video>();
+
 	            await _publisher.Publish(new VideoViewedEvent(query.Id, query.Context.Identity), cancellationToken);
-                
-	            return QueryResult.OkOrNotFound(await _videoRepository.GetByIdAsync(query.Id, cancellationToken));
+                    
+				return QueryResult.Ok(video);
             }
         }
     }

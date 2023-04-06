@@ -28,18 +28,13 @@ namespace AcmeTube.Application.Core.Commands
             var validationResult = await ValidateAsync(request);
             if (validationResult.IsValid) return CommandValidationResult.Succeeded;
 
-            var errors = ParseErrors(validationResult);
-            return CommandValidationResult.Failed(errors);
-        }
+			var errors = validationResult.Errors
+				.Where(x => x.Severity == Severity.Error)
+				.Select(CreateReport)
+				.DefaultIfEmpty()
+				.ToList();
 
-        /// <summary>
-        /// Translate to <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> from <see cref="List{T}"/>.
-        /// </summary>
-        private static List<Report> ParseErrors(ValidationResult validationResult)
-        {
-            var errors = validationResult.Errors?.Where(x => x.Severity == Severity.Error).Select(CreateReport);
-
-            return (errors ?? Enumerable.Empty<Report>()).ToList();
+			return CommandValidationResult.Failed(errors);
         }
 
         /// <summary>

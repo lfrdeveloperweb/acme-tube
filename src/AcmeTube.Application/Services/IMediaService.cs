@@ -5,6 +5,6 @@ namespace AcmeTube.Application.Services
 {
 	public interface IMediaService
 	{
-		Task<(TimeSpan Duration, byte[] ThumbnailData)> GetVideoMetadata(byte[] fileContent, string fileExtension);
+		Task<(TimeSpan Duration, byte[] ThumbnailData)> GetVideoMetadata(byte[] fileContent);
 	}
 }

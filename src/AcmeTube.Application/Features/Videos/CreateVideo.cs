@@ -31,30 +31,53 @@ namespace AcmeTube.Application.Features.Videos
         public sealed class CommandHandler : CommandHandler<Command, CommandResult<Video>>
         {
 	        private readonly IMediaService _mediaService;
+	        private readonly IFileStorageService _fileStorageService;
 	        private readonly IKeyGenerator _keyGenerator;
+	        private readonly MediaSettings _mediaSettings;
 
-            public CommandHandler(
+	        public CommandHandler(
                 ILoggerFactory loggerFactory,
                 IUnitOfWork unitOfWork,
                 ICommandValidator<Command> validator,
                 IMapper mapper,
                 IMediaService mediaService,
-                IKeyGenerator keyGenerator) : base(loggerFactory, unitOfWork, validator, mapper: mapper)
+                IFileStorageService fileStorageService,
+                IKeyGenerator keyGenerator,
+                MediaSettings mediaSettings) : base(loggerFactory, unitOfWork, validator, mapper: mapper)
             {
 	            _mediaService = mediaService;
+	            _fileStorageService = fileStorageService;
 	            _keyGenerator = keyGenerator;
+	            _mediaSettings = mediaSettings;
             }
 
             protected override async Task<CommandResult<Video>> ProcessCommandAsync(Command command, CancellationToken cancellationToken)
             {
                 var video = Mapper.Map<Video>(command);
                 video.Id = _keyGenerator.Generate();
+				video.VideoFilePath = string.Format(_mediaSettings.ChannelVideoPathTemplate + "/media{2}", video.Channel.Id, video.Id, command.File.Extension);
+                video.ThumbnailFilePath = string.Format(_mediaSettings.ChannelVideoPathTemplate + "/thumbnail.gif", video.Channel.Id, video.Id);
 
-                var (duration, thumbnail) = await _mediaService.GetVideoMetadata(command.File.Content, command.File.Extension);
+				(video.Duration, var thumbnail) = await _mediaService.GetVideoMetadata(command.File.Content);
 
-                video.Duration = duration;
+                var fileUploadedResult = await _fileStorageService.UploadFileAsync(video.VideoFilePath, command.File.Content, cancellationToken);
+                if (!fileUploadedResult.Succeeded)
+                {
 
-				await UnitOfWork.VideoRepository.CreateAsync(video, cancellationToken);
+                }
+
+                var thumbnailUploadResult = await _fileStorageService.UploadFileAsync(video.ThumbnailFilePath, thumbnail, cancellationToken);
+                if (!thumbnailUploadResult.Succeeded)
+                {
+
+                }
+
+				video.VideoExternalId = fileUploadedResult.Data.Id;
+                video.VideoUrl = fileUploadedResult.Data.Url;
+                video.ThumbnailExternalId = fileUploadedResult.Data.Id;
+				video.ThumbnailUrl = thumbnailUploadResult.Data.Url;
+
+                await UnitOfWork.VideoRepository.CreateAsync(video, cancellationToken);
 
                 return CommandResult.Created(video);
             }

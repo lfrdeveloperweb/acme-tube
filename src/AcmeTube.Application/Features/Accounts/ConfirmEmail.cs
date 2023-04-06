@@ -32,13 +32,15 @@ namespace AcmeTube.Application.Features.Accounts
             {
                 if (await UnitOfWork.UserRepository.GetByEmailAsync(command.Email, cancellationToken) is not { } user) 
                     return CommandResult.NotFound();
-                
-                var userToken = await UnitOfWork.UserRepository.GetAsync<UserEmailConfirmationTokenData>(user.Id, UserTokenType.EmailConfirmationToken, command.Token, cancellationToken);
+
+                if (await UnitOfWork.UserRepository.GetAsync<UserEmailConfirmationTokenData>(user.Id, UserTokenType.EmailConfirmationToken, command.Token, cancellationToken) is not { } userToken)
+	                return CommandResult.NotFound();
                 
                 user.ConfirmEmail();
                 user.UpdatedBy = user.Id;
 
                 await UnitOfWork.UserRepository.UpdateAsync(user, cancellationToken);
+                await UnitOfWork.UserRepository.DeleteTokenAsync(userToken.UserId, userToken.Type);
 
                 return CommandResult.NoContent();
             }

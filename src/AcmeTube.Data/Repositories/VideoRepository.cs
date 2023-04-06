@@ -26,6 +26,13 @@ namespace AcmeTube.Data.Repositories
 		public Task<bool> ExistsAsync(string id, CancellationToken cancellationToken) =>
 			ExistsByExpressionAsync(it => it.Id == id, cancellationToken);
 
+		public override Task CreateAsync(Video video, CancellationToken cancellationToken)
+		{
+			Context.Entry(video.Channel).State = EntityState.Unchanged;
+
+			return base.CreateAsync(video, cancellationToken);
+		}
+
 		public Task DeleteAsync(Video video, CancellationToken cancellationToken) =>
 			DbSet.Where(it => it.Id == video.Id).ExecuteDeleteAsync(cancellationToken);
 
@@ -34,7 +41,7 @@ namespace AcmeTube.Data.Repositories
 				commandText: "select type from video_rating where video_id = @VideoId and membership_id = @MembershipId",
 				parameters: new { VideoId = videoId, MembershipId = membershipId },
 				cancellationToken: cancellationToken);
-
+		
 		public Task UpsertRatingVideoAsync(string videoId, string membershipId, VideoRatingType ratingType, CancellationToken cancellationToken)
 		{
 			const string commandText = @"

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace AcmeTube.Application.Settings
+﻿namespace AcmeTube.Application.Settings
 {
-	public record MediaSettings(string FolderPath, ICollection<string> SupportedContentTypes, int MaximumSizeInMegabytes);
+	public sealed record MediaSettings
+	{
+		public string ChannelVideoPathTemplate { get; init; }
+		public string[] SupportedContentTypes { get; init; }
+		public int MaximumSizeInMegabytes { get; init; }
+	}
 }

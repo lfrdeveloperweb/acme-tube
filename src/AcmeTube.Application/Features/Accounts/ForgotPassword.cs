@@ -1,19 +1,14 @@
 ﻿using AcmeTube.Application.Core.Commands;
-using AcmeTube.Application.Core.Commons;
 using AcmeTube.Application.Core.Security;
 using AcmeTube.Application.Extensions;
 using AcmeTube.Application.Repositories;
-using AcmeTube.Application.Settings;
+using AcmeTube.Domain.Events;
 using AcmeTube.Domain.Resources;
-using AcmeTube.Domain.Security;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Threading;
 using System.Threading.Tasks;
-using AcmeTube.Domain.Events;
 
 namespace AcmeTube.Application.Features.Accounts
 {

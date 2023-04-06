@@ -14,8 +14,7 @@ public sealed class SubscriptionController : ApiController
 {
 	private readonly SubscriptionAppService _service;
 
-	public SubscriptionController(SubscriptionAppService service, IOperationContextManager operationContextManager)
-		: base(operationContextManager) => _service = service;
+	public SubscriptionController(SubscriptionAppService service) => _service = service;
 
 	/// <summary>
 	/// Get task by id.
@@ -24,8 +23,7 @@ public sealed class SubscriptionController : ApiController
 	[HttpGet("~/channels/{channelId}/subscriptions")]
 	public async Task<IActionResult> ListChannelsSubscriptions(string channelId, [FromQuery] PagingParameters pagingParameters, CancellationToken cancellationToken) =>
 		BuildActionResult(await _service.ListChannelSubscriptionsAsync(channelId, pagingParameters, cancellationToken).ConfigureAwait(false));
-
-
+	
 	[HttpGet("~/accounts/subscriptions")]
 	public async Task<IActionResult> ListUserSubscriptions([FromQuery] PagingParameters pagingParameters, CancellationToken cancellationToken) =>
 		BuildActionResult(await _service.ListUserSubscriptionsAsync(pagingParameters, cancellationToken).ConfigureAwait(false));

@@ -15,10 +15,7 @@ public sealed class UserRepository : Repository<User>, IUserRepository
 {
 	public UserRepository(MainContext context) : base(context) { }
 
-	public async Task<User> GetAsync(Specification<User> spec, CancellationToken cancellationToken)
-	{
-		return default;
-	}
+	public Task<User> GetAsync(Specification<User> spec, CancellationToken cancellationToken) => Task.FromResult(default(User));
 
 	/// <inheritdoc />
 	public Task<User> GetByDocumentNumberAsync(string documentNumber, CancellationToken cancellationToken) =>

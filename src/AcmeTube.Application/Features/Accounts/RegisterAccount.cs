@@ -24,7 +24,7 @@ namespace AcmeTube.Application.Features.Accounts
 			DateTime? BirthDate,
 			string Email,
 			string PhoneNumber,
-			string UserName,
+			string Login,
 			string Password,
 			string ConfirmPassword) : Command<CommandResult<User>>;
 
@@ -51,7 +51,7 @@ namespace AcmeTube.Application.Features.Accounts
             
 				user.Id = _keyGenerator.Generate();
 				user.Role = Role.User;
-				user.ChangePassword(_passwordHasher.HashPassword(command.Password));
+				user.SetPassword(_passwordHasher.HashPassword(command.Password));
 
 				await UnitOfWork.UserRepository.CreateAsync(user, cancellationToken);
 
@@ -73,7 +73,7 @@ namespace AcmeTube.Application.Features.Accounts
 					.WithMessageFromErrorCode(ReportCodeType.DuplicatedDocumentNumber);
 
 				RuleFor(command => command.BirthDate)
-					.Must(birthDate => birthDate <= systemClock.UtcNow.Date)
+					.Must(birthDate => birthDate < systemClock.UtcNow.Date)
 					.When(command => command.BirthDate >= DateTime.MinValue);
             
 				RuleFor(command => command.Email)
@@ -86,10 +86,10 @@ namespace AcmeTube.Application.Features.Accounts
 					.MustAsync(async (phoneNumber, cancellationToken) => !await unitOfWork.UserRepository.ExistByPhoneNumberAsync(phoneNumber, cancellationToken))
 					.WithMessageFromErrorCode(ReportCodeType.DuplicatedPhoneNumber);
             
-				RuleFor(command => command.UserName)
+				RuleFor(command => command.Login)
 					.NotNullOrEmpty()
 					.MustAsync(async (userName, cancellationToken) => !await unitOfWork.UserRepository.ExistByLoginAsync(userName, cancellationToken))
-					.WithMessageFromErrorCode(ReportCodeType.DuplicatedUserName);
+					.WithMessageFromErrorCode(ReportCodeType.DuplicatedLogin);
 
 				RuleFor(request => request.Password)
 					.NotNullOrEmpty()

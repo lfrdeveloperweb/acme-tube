@@ -14,11 +14,7 @@ public sealed class AccountController : ApiController
 {
     private readonly AccountAppService _service;
 
-    public AccountController(AccountAppService service, IOperationContextManager operationContextManager)
-        : base(operationContextManager)
-    {
-        _service = service;
-    }
+    public AccountController(AccountAppService service) => _service = service;
 
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAccountAsync([FromBody] RegisterAccountRequest request, CancellationToken cancellationToken) =>
@@ -29,11 +25,10 @@ public sealed class AccountController : ApiController
         BuildActionResult(await _service.LoginAsync(request, cancellationToken).ConfigureAwait(false));
 
     [Authorize]
-	//[ResourceAuthorization(PermissionType.ChannelFull, PermissionType.ChannelCreate)]
 	[HasPermission(PermissionType.UserRead)]
 	[HttpGet("profile")]
     public async Task<IActionResult> ProfileAsync(CancellationToken cancellationToken) =>
-        BuildActionResult(await _service.GetProfileAsync(OperationContextManager.GetContext(), cancellationToken).ConfigureAwait(false));
+        BuildActionResult(await _service.GetProfileAsync(cancellationToken).ConfigureAwait(false));
 
     [HttpPost("confirm-email")]
     public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request, CancellationToken cancellationToken) =>
@@ -53,13 +48,4 @@ public sealed class AccountController : ApiController
     [HttpPut("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken) =>
         BuildActionResult(await _service.ChangePasswordAsync(request, cancellationToken).ConfigureAwait(false));
-
-    [HttpPost("{id}/lock")]
-    public async Task<IActionResult> LockAsync(string id, CancellationToken cancellationToken) =>
-        BuildActionResult(await _service.LockAccountAsync(id, cancellationToken).ConfigureAwait(false));
-
-    [HttpPost("{id}/unlock")]
-    public async Task<IActionResult> UnlockAsync(string id, CancellationToken cancellationToken) =>
-        BuildActionResult(await _service.UnlockAccountAsync(id, cancellationToken).ConfigureAwait(false));
-
 }

@@ -26,6 +26,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using AcmeTube.Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
+using System.Configuration;
+using AcmeTube.Api.DependencyInjection;
+using AcmeTube.Application.DependencyInjection;
+using AcmeTube.Infrastructure.DependencyInjection;
 
 IdentityModelEventSource.ShowPII = true;
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -156,6 +160,10 @@ builder.Services.AddMediaToolkit(@"C:\Programas\ffmpeg-new\bin\ffmpeg.exe", @"C:
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((context, containerBuilder) =>
 	InjectorBootstrapper.Inject(containerBuilder, builder.Configuration, builder.Services, Assembly.GetExecutingAssembly()));
+
+builder.Services.AddExternalServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 

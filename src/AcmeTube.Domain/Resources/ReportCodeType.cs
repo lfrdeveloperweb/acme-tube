@@ -21,7 +21,7 @@
         DuplicatedDocumentNumber,
         DuplicatedEmail,
         DuplicatedPhoneNumber,
-        DuplicatedUserName,
+        DuplicatedLogin,
 
         UserIsLockedOut,
         UserCannotLockItself,

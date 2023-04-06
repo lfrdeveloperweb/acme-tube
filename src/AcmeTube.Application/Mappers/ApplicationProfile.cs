@@ -37,7 +37,7 @@ namespace AcmeTube.Application.Mappers
         private void ChannelMappers()
         {
 	        CreateMap<CreateChannel.Command, Channel>();
-
+	        
 	        CreateMap<Channel, ChannelResponseData>();
 	        CreateMap<ChannelStats, ChannelStatsResponseData>();
         }
@@ -50,7 +50,9 @@ namespace AcmeTube.Application.Mappers
 
 		private void VideoMappers()
         {
-            CreateMap<CreateVideo.Command, Video>();
+            CreateMap<CreateVideo.Command, Video>()
+	            .ForPath(target => target.Channel.Id, option => option.MapFrom(source => source.ChannelId));
+
             CreateMap<CreateVideoComment.Command, VideoComment>();
 
             CreateMap<Video, VideoResponseData>();

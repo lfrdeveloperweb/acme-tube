@@ -3,19 +3,12 @@ using AcmeTube.Application.Services;
 using AcmeTube.Domain.Commons;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading;
 using System.Threading.Tasks;
+using AcmeTube.Domain.Security;
+using AcmeTube.Infrastructure.Security;
 
 namespace AcmeTube.Api.Controllers;
-
-public class SampleActionFilter : IAsyncActionFilter
-{
-	public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-	{
-		var result = await next();
-	}
-}
 
 [Authorize]
 [Route("channels")]
@@ -23,8 +16,7 @@ public sealed class ChannelController : ApiController
 {
     private readonly ChannelAppService _service;
 
-    public ChannelController(ChannelAppService service, IOperationContextManager operationContextManager)
-        : base(operationContextManager) => _service = service;
+    public ChannelController(ChannelAppService service) => _service = service;
 
 	/// <summary>
 	/// Get task by id.
@@ -42,12 +34,12 @@ public sealed class ChannelController : ApiController
     public async Task<IActionResult> Search(PagingParameters pagingParameters, CancellationToken cancellationToken) =>
         BuildActionResult(await _service.SearchAsync(pagingParameters, cancellationToken).ConfigureAwait(false));
 
-	//[ResourceAuthorization(PermissionType.ChannelFull, PermissionType.ChannelCreate)]
+	[HasPermission(PermissionType.ChannelCreate)]
 	[HttpPost]
     public async Task<IActionResult> Post([FromBody] ChannelForCreationRequest request, CancellationToken cancellationToken) =>
         BuildActionResult(await _service.CreateAsync(request, cancellationToken));
 
-	//[ResourceAuthorization(PermissionType.ChannelFull, PermissionType.ChannelDelete)]
+	[HasPermission(PermissionType.ChannelDelete)]
 	[HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
         BuildActionResult(await _service.DeleteAsync(id, cancellationToken).ConfigureAwait(false));

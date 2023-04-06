@@ -1,4 +1,6 @@
-﻿using AcmeTube.IoC.Modules;
+﻿using AcmeTube.Application.DependencyInjection;
+using AcmeTube.Infrastructure.DependencyInjection;
+using AcmeTube.IoC.Modules;
 using Autofac;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +17,7 @@ namespace AcmeTube.IoC
         /// </summary>
         public static void Inject(ContainerBuilder builder, IConfiguration configuration, IServiceCollection services, Assembly apiAssembly)
         {
-            var assemblies = new[]
+	        var assemblies = new[]
             {
                 apiAssembly,
                 Application.AssemblyReference.Assembly, 
@@ -31,12 +33,10 @@ namespace AcmeTube.IoC
                 //.Where(type => !(type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(INotificationHandler<>)))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
-
-
+            
             builder.RegisterModule(new DataModule(configuration));
             builder.RegisterModule<CoreModule>();
-            builder.RegisterModule<ApplicationModule>();
+            //builder.RegisterModule<ApplicationModule>();
         }
-    }
+	}
 }

@@ -17,6 +17,12 @@ public sealed class Video : EntityBase
 	public Channel Channel { get; set; }
 	public TimeSpan Duration { get; set; }
 	public bool IsPublic { get; set; }
+	public string VideoFilePath { get; set; }
+	public string VideoUrl { get; set; }
+	public string VideoExternalId { get; set; }
+	public string ThumbnailFilePath { get; set; }
+	public string ThumbnailUrl { get; set; }
+	public string ThumbnailExternalId { get; set; }
 	public ICollection<string> Tags { get; set; }
 	public VideoStats Stats { get; set; }
 
