@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ public sealed class PermissionAuthorizationHandler : AuthorizationHandler<Permis
         var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
 
         var permissions = await permissionService.ListPermissionsAsync(subjectId);
-        if (permissions.Contains(requirement.PermissionType))
+        if (permissions.Any(it => requirement.PermissionTypes.Contains(it)))
         {
             context.Succeed(requirement);
         }

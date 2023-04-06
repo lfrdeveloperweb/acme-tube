@@ -1,4 +1,5 @@
-﻿using AcmeTube.Domain.Security;
+﻿using System.Linq;
+using AcmeTube.Domain.Security;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AcmeTube.Infrastructure.Security;
@@ -8,5 +9,5 @@ namespace AcmeTube.Infrastructure.Security;
 /// </summary>
 public sealed class HasPermissionAttribute : AuthorizeAttribute
 {
-    public HasPermissionAttribute(PermissionType permissionType) : base(permissionType.ToString()) { }
+    public HasPermissionAttribute(params PermissionType[] permissionTypes) : base(string.Join("|", permissionTypes)) { }
 }

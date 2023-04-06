@@ -49,6 +49,7 @@
 
 		// Internal Server Errors
 		UnexpectedError = 500000,
+		LocalFileStorageServiceFailure,
 		DropboxFailure,
 	}
 }

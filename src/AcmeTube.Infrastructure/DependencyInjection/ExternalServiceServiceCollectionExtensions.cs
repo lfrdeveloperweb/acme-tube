@@ -1,7 +1,7 @@
 ﻿using AcmeTube.Application.Core.Commons;
 using AcmeTube.Application.Services;
 using AcmeTube.Infrastructure.Services;
-using AcmeTube.Infrastructure.Services.Dropbox;
+using AcmeTube.Infrastructure.Services.Dummies;
 using AcmeTube.Infrastructure.Settings;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;

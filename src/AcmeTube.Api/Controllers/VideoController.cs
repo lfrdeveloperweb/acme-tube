@@ -42,8 +42,7 @@ namespace AcmeTube.Api.Controllers
                 .ConfigureAwait(false));
        
         [Consumes(ApplicationConstants.ContentTypes.FormData)]
-        //[HasPermission(PermissionType.VideoFull)]
-        [HasPermission(PermissionType.VideoCreate)]
+        [HasPermission(PermissionType.VideoFull, PermissionType.VideoCreate)]
 		[HttpPost]
         public async Task<IActionResult> Create([FromForm] VideoForCreationRequest request, IFormFile file, CancellationToken cancellationToken)
         {
@@ -57,12 +56,12 @@ namespace AcmeTube.Api.Controllers
 		        .ConfigureAwait(false));
         }
 
-        [HasPermission(PermissionType.VideoUpdate)]
+        [HasPermission(PermissionType.VideoFull, PermissionType.VideoUpdate)]
 		[HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] VideoForUpdateRequest request, CancellationToken cancellationToken) =>
             BuildActionResult(await _service.UpdateAsync(id, request, cancellationToken).ConfigureAwait(false));
 
-        [HasPermission(PermissionType.VideoDelete)]
+        [HasPermission(PermissionType.VideoFull, PermissionType.VideoDelete)]
 		[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken) =>
             BuildActionResult(await _service.DeleteAsync(id, cancellationToken).ConfigureAwait(false));

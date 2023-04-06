@@ -1,15 +1,16 @@
-﻿using AcmeTube.Domain.Security;
+﻿using System.Collections.Generic;
+using AcmeTube.Domain.Security;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AcmeTube.Infrastructure.Security
 {
     public sealed class PermissionRequirement : IAuthorizationRequirement
     {
-        public PermissionRequirement(PermissionType permissionType)
+        public PermissionRequirement(IEnumerable<PermissionType> permissionTypes)
         {
-            PermissionType = permissionType;
+            PermissionTypes = permissionTypes;
         }
 
-        public PermissionType PermissionType { get; }
+        public IEnumerable<PermissionType> PermissionTypes { get; }
     }
 }
