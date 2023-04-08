@@ -74,7 +74,8 @@ namespace AcmeTube.Api.Controllers
 		[HttpDelete("{id}/rate")]
 		public async Task<IActionResult> DeleteRatingVideo(string id, CancellationToken cancellationToken) =>
 			BuildActionResult(await _service.DeleteRatingAsync(id, cancellationToken).ConfigureAwait(false));
-        
+
+		[HasPermission(PermissionType.VideoFull, PermissionType.VideoDownload)]
 		[HttpGet("{id}/download")]
 		public async Task<IActionResult> Download(string id, CancellationToken cancellationToken)
 		{

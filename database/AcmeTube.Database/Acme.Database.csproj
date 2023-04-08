@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Migrations\001_create_table_user_activity.sql" />
     <None Remove="Migrations\003_create_table_user_claims.sql" />
     <None Remove="Migrations\011_create_table_channel.sql" />
     <None Remove="Migrations\012_create_table_video.sql" />
@@ -25,6 +26,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Migrations\000_create_table_membership.sql" />
+    <EmbeddedResource Include="Migrations\001_create_table_user_activity.sql" />
     <EmbeddedResource Include="Migrations\002_create_table_user_token.sql" />
     <EmbeddedResource Include="Migrations\001_create_table_user.sql" />
     <EmbeddedResource Include="Migrations\003_create_table_user_claims.sql" />
